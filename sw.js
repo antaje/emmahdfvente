@@ -1,12 +1,12 @@
 // EmmaHdfVente : garde l'application disponible même sans réseau.
 // Change le numéro de version quand tu modifies un fichier, pour forcer la mise à jour sur les téléphones.
-const VERSION = "emmahdf-v1";
+const VERSION = "emmahdf-v5";
 const SHELL = [
   "./", "./index.html", "./manifest.webmanifest", "./firebase-config.js",
   "./icons/logo.png", "./icons/icon-192.png", "./icons/icon-512.png",
   "./icons/icon-maskable-512.png", "./icons/apple-touch-icon.png", "./icons/favicon-32.png"
 ];
-const CDN = [/^https:\/\/www\.gstatic\.com\/firebasejs\//, /^https:\/\/fonts\.(googleapis|gstatic)\.com\//];
+const CDN = [/^https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/xlsx\//, /^https:\/\/www\.gstatic\.com\/firebasejs\//, /^https:\/\/fonts\.(googleapis|gstatic)\.com\//];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));

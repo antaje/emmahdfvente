@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>EmmaHdfVente</title>
-<meta name="description" content="Caisse de vente de l'association EMMA Hauts-de-France">
+<meta name="description" content="Caisse et service de l'association EMMA Hauts-de-France">
 <meta name="theme-color" content="#8E2A1E">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/favicon-32.png">
@@ -21,147 +21,163 @@
 :root{
   --bg:#FBF3E6; --surface:#FFFFFF; --ink:#3A1A12; --muted:#7A5C50; --line:#EAD9C6;
   --brick:#8E2A1E; --brick-ink:#FFFFFF; --brick-soft:#F6E1DA; --sand:#CAA28C; --sand-soft:#F3E6D6;
-  --ok:#3F6B3A; --ok-soft:#E4EEDC;
+  --ok:#3F6B3A; --ok-soft:#E4EEDC; --warn:#B26A00; --warn-soft:#FFF1D6;
   --font:"Rubik", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
   color-scheme:light;
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#1D1411; --surface:#2A1D18; --ink:#F7EADB; --muted:#C0A393; --line:#43302A;
-    --brick:#D9735F; --brick-ink:#1D1411; --brick-soft:#4A2721; --sand-soft:#3A2A22;
-    --ok:#8FC27F; --ok-soft:#26351F; color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#1D1411; --surface:#2A1D18; --ink:#F7EADB; --muted:#C0A393; --line:#43302A;
-  --brick:#D9735F; --brick-ink:#1D1411; --brick-soft:#4A2721; --sand-soft:#3A2A22;
-  --ok:#8FC27F; --ok-soft:#26351F; color-scheme:dark;
-}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:inherit}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.45;-webkit-tap-highlight-color:transparent}
 body.hascart{padding-bottom:96px}
-button,input{font:inherit;color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 button:disabled{cursor:default;opacity:.5}
 [hidden]{display:none !important}
 :focus-visible{outline:3px solid var(--brick);outline-offset:2px}
 .wrap{max-width:560px;margin:0 auto;padding:0 16px 40px}
-input{width:100%;height:48px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);padding:0 12px}
-input:focus{border-color:var(--brick);outline:none}
-label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 4px}
+.wrap.wide{max-width:1200px}
+input,textarea{width:100%;min-height:48px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);padding:0 12px}
+textarea{padding:10px 12px;min-height:64px;resize:vertical}
+input:focus,textarea:focus{border-color:var(--brick);outline:none}
+label{display:block;font-size:.85rem;color:var(--muted);margin:12px 0 4px}
 .hint{margin:8px 0 0;font-size:.88rem;color:var(--brick);min-height:1.2em}
+.okmsg{color:var(--ok)}
 .note{margin:24px 4px;color:var(--muted)}
-.primary{height:52px;padding:0 20px;border-radius:12px;border:0;background:var(--brick);color:var(--brick-ink);font-weight:700}
-.ghost{height:52px;padding:0 14px;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--muted)}
-.wide{width:100%}
+.small{font-size:.85rem;color:var(--muted);margin:6px 0 0}
+.primary{min-height:52px;padding:0 20px;border-radius:12px;border:0;background:var(--brick);color:var(--brick-ink);font-weight:700}
+.ghost{min-height:52px;padding:0 14px;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--muted)}
+.ghost.danger{color:var(--brick);border-color:var(--brick-soft)}
+.ghost.armed,.linkrow button.armed{background:var(--brick);border-color:var(--brick);color:var(--brick-ink)}
+.full{width:100%}
+.linkbtn{border:0;background:none;color:var(--brick);text-decoration:underline;padding:8px 0;font-size:.95rem}
+.warnbox{background:var(--brick-soft);border-radius:12px;padding:12px 14px;font-size:.92rem;margin-bottom:12px}
 
 /* Connexion */
-#login{min-height:100%;display:flex;align-items:center}
+.screen{min-height:100vh;display:flex;align-items:center}
 .loginbox{max-width:420px;margin:0 auto;padding:32px 20px;width:100%}
 .brand{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;margin-bottom:22px}
 .brand img{width:132px;height:132px;border-radius:50%;box-shadow:0 0 0 4px var(--surface),0 0 0 5px var(--line)}
 .brand h1{margin:6px 0 0;font-size:1.9rem;letter-spacing:-.01em;color:var(--brick)}
 .brand p{margin:0;color:var(--muted)}
-.tabs{display:grid;grid-template-columns:1fr 1fr;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:6px}
-.tabs button{border:0;background:transparent;height:46px;color:var(--muted);font-weight:500}
-.tabs button[aria-selected="true"]{background:var(--brick);color:var(--brick-ink)}
-.small{font-size:.85rem;color:var(--muted);margin:6px 0 0}
-.linkbtn{border:0;background:none;color:var(--brick);text-decoration:underline;padding:8px 0;font-size:.95rem}
-.warn{background:var(--brick-soft);border-radius:12px;padding:12px 14px;font-size:.92rem;margin-bottom:12px}
 
 /* En-tête */
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:12px 0 12px;border-bottom:1px solid var(--line)}
-.bar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:12px 0;border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:10px}
 .bar img{width:40px;height:40px;border-radius:50%}
-.bar .appname{font-weight:700;color:var(--brick);font-size:1.1rem;line-height:1.1}
-.bar .acct{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+.appname{font-weight:700;color:var(--brick);font-size:1.1rem;line-height:1.1}
+.acct{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
 .menubtn{margin-left:auto;height:40px;padding:0 12px;border-radius:10px;border:1.5px solid var(--line);background:transparent;font-size:.9rem}
-.total{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;flex-shrink:0}
+.seg button{border:0;background:transparent;padding:8px 12px;font-size:.9rem;color:var(--muted);min-height:40px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.viewswitch{margin-top:10px;display:flex}
+.viewswitch .seg{width:100%}
+.viewswitch .seg button{flex:1}
+.total{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:10px}
 #totalEur{font-size:clamp(2.1rem,9vw,2.8rem);font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
 #totalSub{color:var(--muted);font-size:.95rem;text-align:right}
 #totalSub b{color:var(--brick);font-weight:500}
 .sync{display:block;margin-top:6px;font-size:.85rem;color:var(--muted)}
+.sync:empty{display:none}
 .sync.err{color:var(--brick)}
 .search{margin-top:10px;position:relative}
-.search input{padding-left:40px}
+.search input{padding-left:40px;background:var(--surface)}
 .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted);pointer-events:none}
+.cats{display:flex;gap:8px;overflow-x:auto;margin-top:10px;padding-bottom:4px;scrollbar-width:thin}
+.chip{flex-shrink:0;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:20px;border:1.5px solid var(--line);background:var(--surface);font-size:.92rem;white-space:nowrap}
+.chip .dot{width:12px;height:12px;border-radius:50%}
+.chip[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);font-weight:500}
 
-/* Installation */
-.install{margin-top:14px;background:var(--sand-soft);border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:center;font-size:.92rem}
-.install p{margin:0;flex:1}
-.install button{border:0;background:transparent;color:var(--muted);font-size:1.2rem;width:36px;height:36px}
+/* Alertes du service */
+.alerts{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.alert{background:var(--warn-soft);border:1.5px solid var(--warn);border-radius:12px;padding:10px 12px;display:flex;gap:10px;align-items:center;font-size:.95rem}
+.alert span{flex:1}
+.alert button{min-height:40px;padding:0 14px;border-radius:10px;border:0;background:var(--warn);color:#fff;font-weight:500}
 
 /* Produits */
-#list{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+#list{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+.grouphead{display:flex;align-items:center;gap:8px;margin:14px 2px 0;font-weight:500;color:var(--muted);font-size:.95rem}
+.grouphead .dot{width:14px;height:14px;border-radius:50%}
 .item{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:10px 10px 10px 16px}
-.item.incart{border-color:var(--brick)}
+.item.incart{box-shadow:0 0 0 2px var(--ink)}
 .name{font-weight:500;font-size:1.1rem;overflow-wrap:anywhere}
-.meta{display:block;color:var(--muted);font-size:.9rem;font-weight:400;font-variant-numeric:tabular-nums}
+.meta{display:block;color:var(--muted);font-size:.88rem;font-weight:400;font-variant-numeric:tabular-nums}
 .count{min-width:2.4ch;text-align:center;font-size:1.9rem;font-weight:700;font-variant-numeric:tabular-nums}
-.count.zero{color:var(--line)}
+.count.zero{opacity:.25}
 .count.bump{animation:bump .18s ease-out}
 @keyframes bump{50%{transform:scale(1.25)}}
-.minus{width:48px;height:48px;border-radius:12px;border:1.5px solid var(--line);background:transparent;font-size:1.6rem;line-height:1;color:var(--muted)}
+.minus{width:48px;height:48px;border-radius:12px;border:1.5px solid rgba(0,0,0,.12);background:rgba(255,255,255,.6);font-size:1.6rem;line-height:1;color:var(--muted)}
 .plus{width:76px;height:64px;border-radius:14px;border:0;background:var(--brick);color:var(--brick-ink);font-size:2.4rem;font-weight:500;line-height:1}
 .plus:active{transform:scale(.95)}
-.del{height:48px;padding:0 14px;border-radius:12px;border:0;background:var(--brick-soft);color:var(--brick);font-weight:500}
-.editing .plus,.editing .minus,.editing .count{display:none}
-.item .del{display:none}
-.editing .item .del{display:block}
+.editp{min-height:48px;padding:0 16px;border-radius:12px;border:0;background:var(--ink);color:var(--bg);font-weight:500}
+.adminbar{display:flex;gap:8px;margin-top:12px}
+.adminbar button{flex:1;min-height:50px;border-radius:12px;font-weight:500}
+.addbtn{border:1.5px dashed var(--sand);background:transparent;color:var(--brick)}
+.editbar{margin-top:14px;background:var(--brick-soft);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;font-size:.92rem}
+.editbar span{flex:1}
 
 .card{margin-top:22px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
 .card h2{margin:0 0 10px;font-size:1.05rem;font-weight:500}
-.row{display:grid;grid-template-columns:1fr 110px;gap:10px}
-.row label{margin-top:0}
-.card input,.sheet input{background:var(--bg)}
-.addBtn{margin-top:12px;width:100%;height:50px;border:0;border-radius:12px;background:var(--brick-soft);color:var(--brick);font-weight:700}
-
-/* Bilan */
 .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .stat{background:var(--bg);border-radius:10px;padding:10px 12px}
 .stat span{display:block;font-size:.85rem;color:var(--muted)}
 .stat strong{font-size:1.2rem;font-variant-numeric:tabular-nums}
 .stat.unpaid strong{color:var(--brick)}
 
-/* Commandes */
+/* Commandes (caisse) */
 .chead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
 .chead h2{margin:0}
-.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
-.seg button{border:0;background:transparent;padding:8px 12px;font-size:.9rem;color:var(--muted)}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 #orders{list-style:none;margin:0;padding:0}
 .order{padding:12px 0;border-top:1px solid var(--line)}
 .order:first-child{border-top:0}
 .ohead{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
 .oc{font-weight:500;overflow-wrap:anywhere}
+.onum{font-weight:700;color:var(--brick);margin-right:6px}
 .ot{color:var(--muted);font-size:.85rem;font-variant-numeric:tabular-nums;white-space:nowrap}
-.oitems{color:var(--muted);font-size:.92rem;margin:2px 0 8px}
-.ofoot{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.oitems{color:var(--muted);font-size:.92rem;margin:2px 0 4px}
+.onote{font-size:.9rem;background:var(--sand-soft);border-radius:8px;padding:4px 8px;margin:4px 0;display:inline-block}
+.ofoot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px}
 .otot{font-weight:700;font-variant-numeric:tabular-nums;margin-right:auto}
-.badge{height:38px;padding:0 14px;border-radius:19px;border:0;font-weight:500;font-size:.9rem}
+.badge{min-height:38px;padding:0 14px;border-radius:19px;border:0;font-weight:500;font-size:.9rem}
 .badge.paye{background:var(--ok-soft);color:var(--ok)}
 .badge.non_paye{background:var(--brick);color:var(--brick-ink)}
 .badge.armed{outline:2px solid var(--brick)}
-.odel{height:38px;padding:0 12px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:var(--muted);font-size:.85rem}
+.svcbadge{display:inline-flex;align-items:center;min-height:30px;padding:0 10px;border-radius:15px;font-size:.82rem;font-weight:500;background:var(--warn-soft);color:var(--warn)}
+.svcbadge.done{background:var(--ok-soft);color:var(--ok)}
+.odel{min-height:38px;padding:0 12px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:var(--muted);font-size:.85rem}
 .odel.armed{background:var(--brick);border-color:var(--brick);color:var(--brick-ink)}
-.more{margin-top:10px;width:100%;height:44px;border-radius:10px;border:1.5px solid var(--line);background:transparent;font-size:.95rem}
+.more{margin-top:10px;width:100%;min-height:44px;border-radius:10px;border:1.5px solid var(--line);background:transparent;font-size:.95rem}
 
-.tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
-.tool{height:44px;padding:0 14px;border-radius:10px;border:1.5px solid var(--line);background:transparent;font-size:.95rem}
-.tool.danger{color:var(--brick)}
-.tool.armed{background:var(--brick);border-color:var(--brick);color:var(--brick-ink)}
-
-#jList{list-style:none;margin:8px 0 0;padding:0;max-height:560px;overflow-y:auto}
-#jList li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:.95rem;align-items:baseline}
-#jList li:first-child{border-top:0}
-.jt{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.85rem;white-space:nowrap}
-.jd{display:block;color:var(--muted);font-size:.85rem}
-.jr{text-align:right;font-variant-numeric:tabular-nums;font-size:.9rem;white-space:nowrap}
-.jr .pos{color:var(--ok);display:block} .jr .neg{color:var(--brick);display:block}
+/* Service */
+.svhead{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.svhead .seg{flex:1;min-width:220px}
+.svhead .seg button{flex:1}
+.vibbtn{min-height:40px;padding:0 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);font-size:.9rem}
+.svgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:14px;align-items:start}
+.svcard{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.svcard.flash{animation:flash 1.2s ease-out 3}
+@keyframes flash{0%{box-shadow:0 0 0 4px var(--brick)}100%{box-shadow:0 0 0 0 transparent}}
+.svtop{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.svnum{font-size:1.6rem;font-weight:700;color:var(--brick);line-height:1}
+.svtable{font-weight:700;font-size:1.05rem;background:var(--ink);color:var(--bg);border-radius:8px;padding:2px 10px}
+.svtable.emporter{background:var(--sand-soft);color:var(--ink)}
+.svtime{margin-left:auto;color:var(--muted);font-size:.85rem;white-space:nowrap}
+.svclient{font-weight:500}
+.svnote{background:var(--warn-soft);border-radius:8px;padding:6px 10px;font-size:.95rem}
+.typehead{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:6px}
+.svitem{display:grid;grid-template-columns:auto 1fr auto auto;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line)}
+.svitem .dot{width:12px;height:12px;border-radius:50%}
+.svitem .lbl{font-size:1.05rem}
+.svitem.done .lbl{text-decoration:line-through;color:var(--muted)}
+.svitem.ko .lbl{text-decoration:line-through;color:var(--brick)}
+.svitem button{min-height:44px;padding:0 12px;border-radius:10px;border:1.5px solid var(--line);background:transparent;font-size:.88rem}
+.svitem button.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.svitem button.ko.on{background:var(--brick);border-color:var(--brick)}
+.svfoot{display:flex;gap:8px;margin-top:6px}
+.svfoot button{flex:1}
 
 /* Barre de commande */
 .cartbar{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
@@ -174,118 +190,146 @@ label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 4px}
 .overlay{position:fixed;inset:0;z-index:20;background:rgba(30,12,8,.5);display:flex;align-items:flex-end;justify-content:center}
 .sheet{background:var(--surface);width:100%;max-width:560px;max-height:92%;overflow-y:auto;border-radius:18px 18px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px))}
 .sheet h2{margin:0 0 12px;font-size:1.25rem;font-weight:700}
-.sheet h3{margin:20px 0 4px;font-size:1rem;font-weight:500}
-#sItems{list-style:none;margin:0 0 14px;padding:0}
-#sItems li{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
-#sItems li:first-child{border-top:0}
+.sheet h3{margin:22px 0 4px;font-size:1rem;font-weight:500}
+.sitems{list-style:none;margin:0 0 14px;padding:0}
+.sitems li{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
+.sitems li:first-child{border-top:0}
 .stotal{display:flex;justify-content:space-between;font-size:1.3rem;font-weight:700;margin:4px 0 8px;font-variant-numeric:tabular-nums}
+.two{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+.two label{margin-top:12px}
+.toggle{min-height:48px;padding:0 14px;border-radius:10px;border:1.5px solid var(--line);background:transparent;white-space:nowrap}
+.toggle[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
 .pay{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
-.pay button{height:52px;border-radius:12px;border:1.5px solid var(--line);background:transparent;font-weight:500}
-.pay button[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.pay button{min-height:52px;border-radius:12px;border:1.5px solid var(--line);background:transparent;font-weight:500}
+.pay button[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff}
 .pay button[data-v="non_paye"][aria-pressed="true"]{background:var(--brick);border-color:var(--brick);color:var(--brick-ink)}
 .cash{margin-top:12px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
 .cash label{margin-top:0}
 #rendu{font-weight:700;font-variant-numeric:tabular-nums;padding-bottom:12px;white-space:nowrap}
 #rendu.neg{color:var(--brick)}
 .sactions{display:grid;grid-template-columns:auto 1fr;gap:10px;margin-top:18px}
+.linkrow{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.linkrow button{min-height:50px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);text-align:left;padding:0 16px;font-size:1rem}
+.linkrow button.danger{color:var(--brick)}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.palette{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:6px}
+.swatch{aspect-ratio:1;border-radius:12px;border:3px solid transparent;min-height:44px}
+.swatch[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 2px #fff}
+.catrow,.memrow{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.catrow:first-child,.memrow:first-child{border-top:0}
+.catrow .dot{width:22px;height:22px;border-radius:50%;flex:0 0 22px}
+.catrow span,.memrow span{flex:1;overflow-wrap:anywhere}
+.catrow button,.memrow button{min-height:40px;padding:0 12px;border-radius:10px;border:1.5px solid var(--line);background:transparent;font-size:.88rem}
+.catrow button.armed,.memrow button.armed{background:var(--brick);border-color:var(--brick);color:#fff}
+#jList{list-style:none;margin:8px 0 0;padding:0}
+#jList li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:.95rem;align-items:baseline}
+#jList li:first-child{border-top:0}
+.jt{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.85rem;white-space:nowrap}
+.jd{display:block;color:var(--muted);font-size:.85rem}
+.jr{text-align:right;font-variant-numeric:tabular-nums;font-size:.9rem;white-space:nowrap}
+.jr .pos{color:var(--ok);display:block} .jr .neg{color:var(--brick);display:block}
+details summary{cursor:pointer;color:var(--brick);font-weight:500;margin-top:16px;min-height:32px}
+.install{margin-top:14px;background:var(--sand-soft);border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:center;font-size:.92rem}
+.install p{margin:0;flex:1}
+.install .x{border:0;background:transparent;color:var(--muted);font-size:1.2rem;width:36px;height:36px}
 
 @media (max-width:380px){
   .item{grid-template-columns:1fr auto auto;padding-left:12px}
   .item .name{grid-column:1/-1}
+  .palette{grid-template-columns:repeat(4,1fr)}
 }
-@media (prefers-reduced-motion:reduce){.count.bump{animation:none}.plus:active{transform:none}}
+@media (prefers-reduced-motion:reduce){.count.bump,.svcard.flash{animation:none}.plus:active{transform:none}}
 </style>
 </head>
 <body>
 
-<!-- ============ ÉCRAN DE CONNEXION ============ -->
-<section id="login" hidden>
+<!-- ============ CONNEXION ============ -->
+<section id="login" class="screen" hidden>
   <div class="loginbox">
     <div class="brand">
       <img src="icons/logo.png" alt="Logo EMMA Hauts-de-France">
       <h1>EmmaHdfVente</h1>
-      <p>La caisse de l'association EMMA Hauts-de-France</p>
+      <p>Caisse et service de l'association EMMA Hauts-de-France</p>
     </div>
+    <div class="warnbox" id="cfgMissing" hidden>La connexion aux comptes n'est pas configurée (fichier <b>firebase-config.js</b>). Tu peux essayer l'application en mode démo.</div>
+    <div class="warnbox" id="fbError" hidden></div>
+    <form id="loginForm" autocomplete="on">
+      <label for="lId">Identifiant</label>
+      <input id="lId" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Ex. caisse" required>
+      <label for="lPw">Mot de passe</label>
+      <input id="lPw" name="password" type="password" autocomplete="current-password" required>
+      <label for="lVendeur">Ton prénom (facultatif, pour le journal)</label>
+      <input id="lVendeur" autocomplete="given-name" maxlength="30" placeholder="Ex. Tahiana">
+      <p class="hint" id="lHint"></p>
+      <button class="primary full" type="submit" id="lSubmit">Se connecter</button>
+      <p class="small">Les identifiants sont fournis par l'administrateur de l'association.</p>
+    </form>
+    <p style="text-align:center;margin-top:10px"><button class="linkbtn" type="button" id="demoBtn">Mode démo (données sur cet appareil)</button></p>
+  </div>
+</section>
 
-    <div class="warn" id="cfgMissing" hidden>La connexion aux comptes n'est pas encore configurée (fichier <b>firebase-config.js</b>). Tu peux déjà essayer l'application en mode essai.</div>
-    <div class="warn" id="fbError" hidden></div>
-
-    <div id="loginArea">
-      <div class="tabs" role="tablist">
-        <button type="button" role="tab" id="tabLogin" aria-selected="true">Se connecter</button>
-        <button type="button" role="tab" id="tabCreate" aria-selected="false">Créer un compte</button>
-      </div>
-      <form id="loginForm" autocomplete="on">
-        <label for="lId">Identifiant</label>
-        <input id="lId" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Ex. emmahdf" required>
-        <label for="lPw">Mot de passe</label>
-        <input id="lPw" name="password" type="password" autocomplete="current-password" required>
-        <div id="createFields" hidden>
-          <label for="lPw2">Confirme le mot de passe</label>
-          <input id="lPw2" type="password" autocomplete="new-password">
-          <p class="small">Aucune adresse e-mail n'est demandée. Note bien l'identifiant et le mot de passe : ils servent à se connecter sur tous les téléphones.</p>
-        </div>
-        <label for="lVendeur">Ton prénom (facultatif, pour le journal)</label>
-        <input id="lVendeur" autocomplete="given-name" maxlength="30" placeholder="Ex. Tahiana">
-        <p class="hint" id="lHint"></p>
-        <button class="primary wide" type="submit" id="lSubmit">Se connecter</button>
-      </form>
-    </div>
-    <p style="text-align:center;margin-top:14px"><button class="linkbtn" type="button" id="localBtn">Essayer sans compte (données sur ce téléphone)</button></p>
+<section id="noAccess" class="screen" hidden>
+  <div class="loginbox">
+    <div class="brand"><img src="icons/logo.png" alt=""><h1>Accès non activé</h1>
+      <p id="noAccessText">Ce compte n'a pas encore de droits. Demande à l'administrateur de l'association.</p></div>
+    <button class="primary full" type="button" id="noAccessLogout">Se déconnecter</button>
   </div>
 </section>
 
 <!-- ============ APPLICATION ============ -->
 <div id="app" hidden>
-<div class="wrap">
+<div class="wrap" id="wrap">
   <header class="top">
     <div class="bar">
       <img src="icons/logo.png" alt="">
       <div class="appname">EmmaHdfVente<span class="acct" id="acctLabel"></span></div>
-      <button class="menubtn" id="menuBtn" type="button">Compte</button>
+      <button class="menubtn" id="menuBtn" type="button">Menu</button>
     </div>
-    <div class="total">
-      <span id="totalEur">0,00&nbsp;€</span>
-      <span id="totalSub">encaissé</span>
+    <div class="viewswitch" id="viewSwitch" hidden>
+      <div class="seg" role="group" aria-label="Affichage">
+        <button type="button" data-view="caisse" aria-pressed="true">Caisse</button>
+        <button type="button" data-view="service" aria-pressed="false">Service</button>
+      </div>
     </div>
-    <span id="sync" class="sync"></span>
-    <div class="search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input id="search" type="search" placeholder="Rechercher un produit" aria-label="Rechercher un produit" autocomplete="off">
+
+    <div id="caisseHead">
+      <div class="total"><span id="totalEur">0,00&nbsp;€</span><span id="totalSub">encaissé</span></div>
+      <span id="sync" class="sync"></span>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="search" type="search" placeholder="Rechercher un produit" aria-label="Rechercher un produit" autocomplete="off">
+      </div>
+      <div class="cats" id="catTabs" role="group" aria-label="Filtrer par catégorie"></div>
+    </div>
+
+    <div id="serviceHead" hidden>
+      <span id="sync2" class="sync"></span>
+      <div class="svhead">
+        <div class="seg" role="group" aria-label="Commandes">
+          <button type="button" data-sv="afaire" aria-pressed="true" id="svTabTodo">À faire</button>
+          <button type="button" data-sv="terminees" aria-pressed="false" id="svTabDone">Terminées</button>
+        </div>
+        <button class="vibbtn" id="vibBtn" type="button"></button>
+      </div>
     </div>
   </header>
 
-  <main>
+  <main id="caisseView">
     <div class="install" id="installCard" hidden>
       <p id="installText"></p>
-      <button type="button" id="installGo" class="primary" style="height:40px;width:auto;padding:0 14px;color:var(--brick-ink);font-size:.9rem" hidden>Installer</button>
-      <button type="button" id="installClose" aria-label="Masquer">✕</button>
+      <button type="button" id="installGo" class="primary" style="min-height:40px;padding:0 14px;font-size:.9rem" hidden>Installer</button>
+      <button type="button" class="x" id="installClose" aria-label="Masquer">✕</button>
     </div>
-
+    <div class="alerts" id="alerts"></div>
+    <div class="editbar" id="editBar" hidden><span>Touche « Modifier » sur le produit à changer.</span><button class="primary" type="button" id="editDone" style="min-height:40px;padding:0 14px">Terminé</button></div>
     <p id="loading" class="note">Chargement des produits…</p>
-    <ul id="list" aria-live="polite"></ul>
-    <p id="empty" class="note" hidden>Aucun produit pour l'instant. Ajoute ton premier produit ci-dessous, puis appuie sur + pour le mettre dans la commande. Les produits sont enregistrés dans le compte : pas besoin de les ressaisir sur un autre téléphone.</p>
-    <p id="noMatch" class="note" hidden></p>
-
-    <form class="card" id="addForm" autocomplete="off">
-      <h2>Ajouter un produit</h2>
-      <div class="row">
-        <div><label for="pName">Nom du produit</label><input id="pName" maxlength="60" placeholder="Ex. Samoussa" required></div>
-        <div><label for="pPrice">Prix (€)</label><input id="pPrice" inputmode="decimal" placeholder="1,50"></div>
-      </div>
-      <button class="addBtn" type="submit">Ajouter le produit</button>
-      <p class="hint" id="hint"></p>
-    </form>
-
-    <section class="card">
-      <h2>Bilan de la session</h2>
-      <div class="stats">
-        <div class="stat"><span>Espèces</span><strong id="stEsp">0,00 €</strong></div>
-        <div class="stat"><span>Carte</span><strong id="stCarte">0,00 €</strong></div>
-        <div class="stat"><span>Autre (Lydia, virement…)</span><strong id="stAutre">0,00 €</strong></div>
-        <div class="stat unpaid"><span>Non payé</span><strong id="stNon">0,00 €</strong></div>
-      </div>
-    </section>
+    <ul id="list"></ul>
+    <p id="empty" class="note" hidden></p>
+    <div id="noMatch" class="note" hidden></div>
+    <div class="adminbar" id="adminBar" hidden>
+      <button type="button" class="addbtn" id="addProdBtn">＋ Nouveau produit</button>
+      <button type="button" class="ghost" id="editModeBtn">Modifier les produits</button>
+    </div>
 
     <section class="card">
       <div class="chead">
@@ -299,20 +343,11 @@ label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 4px}
       <p id="noOrders" class="note" style="margin:12px 0 0">Aucune commande pour l'instant.</p>
       <button class="more" id="ordersMore" type="button" hidden>Afficher plus de commandes</button>
     </section>
+  </main>
 
-    <div class="tools">
-      <button class="tool" id="journalBtn" type="button">Voir le journal</button>
-      <button class="tool" id="editBtn" type="button">Supprimer des produits</button>
-      <button class="tool" id="exportBtn" type="button">Exporter les commandes (CSV)</button>
-      <button class="tool" id="exportJBtn" type="button">Exporter le journal (CSV)</button>
-      <button class="tool danger" id="resetBtn" type="button">Nouvelle session (remise à zéro)</button>
-    </div>
-
-    <section class="card" id="journalBox" hidden>
-      <div class="chead"><h2>Journal des actions</h2><small id="jInfo" style="color:var(--muted)"></small></div>
-      <ul id="jList"></ul>
-      <button class="more" id="jMore" type="button" hidden>Afficher plus d'actions</button>
-    </section>
+  <main id="serviceView" hidden>
+    <div class="svgrid" id="svGrid"></div>
+    <p class="note" id="svEmpty" hidden></p>
   </main>
 </div>
 
@@ -329,12 +364,18 @@ label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 4px}
 <div class="overlay" id="overlay" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle">
     <h2 id="sTitle">Confirmer la commande</h2>
-    <ul id="sItems"></ul>
+    <ul class="sitems" id="sItems"></ul>
     <div class="stotal"><span>Total</span><span id="sTotal">0,00 €</span></div>
-    <div id="clientBox">
+    <div id="orderFields">
       <label for="sClient">Nom du client</label>
       <input id="sClient" maxlength="60" placeholder="Ex. Rakoto" list="clientsList" autocomplete="off">
       <datalist id="clientsList"></datalist>
+      <div class="two">
+        <div><label for="sTable">Table (facultatif)</label><input id="sTable" maxlength="20" placeholder="Ex. 4, Terrasse 2…"></div>
+        <button type="button" class="toggle" id="sEmporter" aria-pressed="false">À emporter</button>
+      </div>
+      <label for="sNote">Note pour le service (facultatif)</label>
+      <input id="sNote" maxlength="140" placeholder="Ex. sans piment, allergie arachide">
     </div>
     <div class="pay" role="group" aria-label="Paiement">
       <button type="button" data-v="especes" aria-pressed="true">Espèces</button>
@@ -354,28 +395,139 @@ label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 4px}
   </div>
 </div>
 
-<!-- Compte -->
-<div class="overlay" id="settings" hidden>
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="setTitle">
-    <h2 id="setTitle">Compte</h2>
-    <p id="setAcct" style="margin:0;color:var(--muted)"></p>
+<!-- Produit (admin) -->
+<div class="overlay" id="prodSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="pTitle">
+    <h2 id="pTitle">Nouveau produit</h2>
+    <div class="two" style="grid-template-columns:1fr 120px">
+      <div><label for="pName">Nom du produit</label><input id="pName" maxlength="60" placeholder="Ex. Brochette de bœuf"></div>
+      <div><label for="pPrice">Prix (€)</label><input id="pPrice" inputmode="decimal" placeholder="3,50"></div>
+    </div>
+    <label>Catégorie (couleur)</label>
+    <div class="choices" id="pCats"></div>
+    <p class="small"><button class="linkbtn" type="button" id="pManageCats">Créer ou modifier les catégories</button></p>
+    <label>Type</label>
+    <div class="choices" id="pTypes"></div>
+    <p class="hint" id="pHint"></p>
+    <div class="sactions">
+      <button class="ghost" id="pCancel" type="button">Annuler</button>
+      <button class="primary" id="pSave" type="button">Enregistrer</button>
+    </div>
+    <button class="ghost danger full" id="pDelete" type="button" style="margin-top:10px" hidden>Supprimer ce produit</button>
+  </div>
+</div>
 
-    <label for="setVendeur">Ton prénom sur ce téléphone (affiché dans le journal)</label>
-    <input id="setVendeur" maxlength="30" placeholder="Ex. Tahiana">
+<!-- Catégories (admin) -->
+<div class="overlay" id="catSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="cTitle">
+    <h2 id="cTitle">Catégories et couleurs</h2>
+    <div id="catList"></div>
+    <h3 id="cFormTitle">Nouvelle catégorie</h3>
+    <label for="cName">Titre</label>
+    <input id="cName" maxlength="30" placeholder="Ex. Bœuf">
+    <label>Couleur</label>
+    <div class="palette" id="palette"></div>
+    <p class="hint" id="cHint"></p>
+    <div class="sactions">
+      <button class="ghost" id="cClose" type="button">Fermer</button>
+      <button class="primary" id="cSave" type="button">Ajouter la catégorie</button>
+    </div>
+    <button class="linkbtn" id="cCancelEdit" type="button" hidden>Annuler la modification</button>
+  </div>
+</div>
 
-    <div id="pwBox">
-      <h3>Changer le mot de passe</h3>
-      <label for="pwOld">Mot de passe actuel</label><input id="pwOld" type="password" autocomplete="current-password">
-      <label for="pwNew">Nouveau mot de passe (6 caractères minimum)</label><input id="pwNew" type="password" autocomplete="new-password">
-      <button class="ghost wide" id="pwSave" type="button" style="margin-top:10px">Changer le mot de passe</button>
-      <p class="hint" id="pwHint"></p>
+<!-- Comptes (admin) -->
+<div class="overlay" id="accSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="aTitle">
+    <h2 id="aTitle">Comptes</h2>
+    <p class="small" id="aIntro">Toi seul crées les comptes. Donne ensuite l'identifiant et le mot de passe aux bénévoles.</p>
+    <div id="memList" style="margin-top:8px"></div>
+    <h3>Créer un compte</h3>
+    <label for="aId">Identifiant</label>
+    <input id="aId" autocapitalize="none" spellcheck="false" placeholder="Ex. caisse">
+    <label for="aPw">Mot de passe (6 caractères minimum)</label>
+    <input id="aPw" type="text" autocomplete="off" spellcheck="false">
+    <label>Rôle</label>
+    <div class="choices" id="aRoles">
+      <button type="button" class="chip" data-r="caisse" aria-pressed="true">Caisse</button>
+      <button type="button" class="chip" data-r="service" aria-pressed="false">Service</button>
+    </div>
+    <p class="hint" id="aHint"></p>
+    <button class="primary full" id="aCreate" type="button" style="margin-top:6px">Créer le compte</button>
+    <details id="aPwBox">
+      <summary>Changer le mot de passe d'un compte</summary>
+      <label for="aPwId">Identifiant</label><input id="aPwId" autocapitalize="none" spellcheck="false">
+      <label for="aPwOld">Mot de passe actuel</label><input id="aPwOld" type="text" autocomplete="off">
+      <label for="aPwNew">Nouveau mot de passe</label><input id="aPwNew" type="text" autocomplete="off">
+      <button class="ghost full" id="aPwSave" type="button" style="margin-top:10px">Changer le mot de passe</button>
+      <p class="hint" id="aPwHint"></p>
+    </details>
+    <button class="ghost full" id="aClose" type="button" style="margin-top:18px">Fermer</button>
+  </div>
+</div>
+
+<!-- Export Excel -->
+<div class="overlay" id="expSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="eTitle">
+    <h2 id="eTitle">Exporter les ventes (Excel)</h2>
+    <p class="small">Le fichier contient une ligne par produit vendu, la liste des commandes et des onglets de synthèse (par produit, catégorie, moyen de paiement et jour).</p>
+    <div class="linkrow">
+      <button type="button" id="eSession">Session en cours</button>
+      <button type="button" id="eAll">Tout l'historique</button>
+    </div>
+    <p class="hint" id="eHint"></p>
+    <button class="ghost full" id="eClose" type="button" style="margin-top:14px">Fermer</button>
+  </div>
+</div>
+
+<!-- Journal (admin) -->
+<div class="overlay" id="journalSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="jTitle">
+    <div class="chead"><h2 id="jTitle" style="margin:0">Journal des actions</h2><small id="jInfo" style="color:var(--muted)"></small></div>
+    <ul id="jList"></ul>
+    <button class="more" id="jMore" type="button" hidden>Afficher plus d'actions</button>
+    <button class="ghost full" id="jClose" type="button" style="margin-top:14px">Fermer</button>
+  </div>
+</div>
+
+<!-- Menu -->
+<div class="overlay" id="menuSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <h2 id="mTitle">Menu</h2>
+
+    <div id="mBilan">
+      <h3 style="margin-top:0">Bilan de la session</h3>
+      <div class="stats">
+        <div class="stat"><span>Espèces</span><strong id="stEsp">0,00 €</strong></div>
+        <div class="stat"><span>Carte</span><strong id="stCarte">0,00 €</strong></div>
+        <div class="stat"><span>Autre</span><strong id="stAutre">0,00 €</strong></div>
+        <div class="stat unpaid"><span>Non payé</span><strong id="stNon">0,00 €</strong></div>
+      </div>
     </div>
 
-    <h3>Installer sur ce téléphone</h3>
-    <p class="small" id="setInstall"></p>
+    <div id="mFond">
+      <h3>Fond de caisse</h3>
+      <div class="two"><div><label for="fDebut">Fond au début de la session (€)</label><input id="fDebut" inputmode="decimal" placeholder="Ex. 50"></div><button class="ghost" id="fDebutSave" type="button">Enregistrer</button></div>
+      <div class="two"><div><label for="fFin">Espèces comptées à la fin (€)</label><input id="fFin" inputmode="decimal" placeholder="Ex. 182,50"></div><button class="ghost" id="fFinSave" type="button">Enregistrer</button></div>
+      <p class="small" id="fResume"></p>
+    </div>
 
+    <div class="linkrow" id="mLinks"></div>
+
+    <h3>Ce téléphone</h3>
+    <p id="mAcct" class="small" style="margin-top:0"></p>
+    <label for="mVendeur">Ton prénom (affiché dans le journal)</label>
+    <input id="mVendeur" maxlength="30" placeholder="Ex. Tahiana">
+    <details id="mPwBox">
+      <summary>Changer mon mot de passe</summary>
+      <label for="pwOld">Mot de passe actuel</label><input id="pwOld" type="password" autocomplete="current-password">
+      <label for="pwNew">Nouveau mot de passe (6 caractères minimum)</label><input id="pwNew" type="password" autocomplete="new-password">
+      <button class="ghost full" id="pwSave" type="button" style="margin-top:10px">Changer le mot de passe</button>
+      <p class="hint" id="pwHint"></p>
+    </details>
+    <details><summary>Installer sur cet appareil</summary><p class="small" id="mInstall"></p></details>
     <div class="sactions">
-      <button class="ghost" id="setClose" type="button">Fermer</button>
+      <button class="ghost" id="mClose" type="button">Fermer</button>
       <button class="primary" id="logoutBtn" type="button">Se déconnecter</button>
     </div>
   </div>
@@ -389,44 +541,68 @@ const norm = s => (s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toL
 const pad = n => String(n).padStart(2, "0");
 const dayKey = (d = new Date()) => d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate());
 const hm = t => { const d = new Date(t); return (dayKey(d) === dayKey() ? "" : pad(d.getDate()) + "/" + pad(d.getMonth() + 1) + " ") + pad(d.getHours()) + ":" + pad(d.getMinutes()); };
+const ago = t => { const m = Math.floor((Date.now() - t) / 60000); if (m < 1) return "à l'instant"; if (m < 60) return "il y a " + m + " min"; return "il y a " + Math.floor(m / 60) + " h " + pad(m % 60); };
 const rid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
 const plural = (n, s, p) => n + " " + (n > 1 ? p : s);
 const summary = items => (items || []).map(i => i.q + "× " + i.nom).join(", ");
 const round2 = n => Math.round(n * 100) / 100;
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
 const LS = {
   get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
   del(k) { try { localStorage.removeItem(k); } catch (e) {} }
 };
-const MOYENS = { especes: "Espèces", carte: "Carte", autre: "Autre" };
-const statutLabel = o => o.statut === "paye" ? (MOYENS[o.moyen] || "Payé") : "Non payé";
+function hexRgb(h) { h = (h || "#999999").replace("#", ""); return [0, 2, 4].map(i => parseInt(h.substr(i, 2), 16)); }
+const rgba = (h, a) => { const [r, g, b] = hexRgb(h); return "rgba(" + r + "," + g + "," + b + "," + a + ")"; };
+const textOn = h => { const [r, g, b] = hexRgb(h); return (0.299 * r + 0.587 * g + 0.114 * b) > 160 ? "#2A140E" : "#FFFFFF"; };
+function parseMoney(s) { s = (s || "").replace(/\s|€/g, "").replace(",", "."); if (s === "") return 0; const n = Number(s); return isFinite(n) && n >= 0 ? round2(n) : NaN; }
+
+const ESPACE = "principal";
 const ID_DOMAIN = "emmahdfvente.app"; // pseudo-adresse technique : aucun e-mail n'est jamais envoyé
+const PALETTE = [
+  ["Rouge", "#C62828"], ["Brique", "#8E2A1E"], ["Bordeaux", "#7B1F3A"], ["Framboise", "#AD1457"], ["Rose", "#EC407A"], ["Corail", "#FF7043"],
+  ["Orange", "#EF6C00"], ["Ambre", "#FFB300"], ["Jaune", "#FDD835"], ["Moutarde", "#C9A227"], ["Marron", "#6D4C41"], ["Caramel", "#A1887F"],
+  ["Sable", "#CAA28C"], ["Olive", "#827717"], ["Vert", "#2E7D32"], ["Vert clair", "#7CB342"], ["Menthe", "#26A69A"], ["Turquoise", "#00ACC1"],
+  ["Bleu ciel", "#42A5F5"], ["Bleu", "#1565C0"], ["Bleu nuit", "#283593"], ["Violet", "#6A1B9A"], ["Lavande", "#9575CD"], ["Gris", "#607D8B"]
+];
+const TYPES = { entree: "Entrée", plat: "Plat", dessert: "Dessert", boisson: "Boisson" };
+const TYPE_ORDER = ["entree", "plat", "dessert", "boisson", ""];
+const TYPE_PLURAL = { entree: "Entrées", plat: "Plats", dessert: "Desserts", boisson: "Boissons", "": "Autres" };
+const MOYENS = { especes: "Espèces", carte: "Carte", autre: "Autre" };
+const ROLES = { admin: "Administrateur", caisse: "Caisse", service: "Service" };
+const statutLabel = o => o.statut === "paye" ? (MOYENS[o.moyen] || "Payé") : "Non payé";
 
 let deviceId = LS.get("emmahdf-device", null);
 if (!deviceId) { deviceId = "d" + rid(); LS.set("emmahdf-device", deviceId); }
 const sessionId = rid().slice(0, 6);
 let vendeur = LS.get("emmahdf-vendeur", "");
+let vibre = LS.get("emmahdf-vibre", true);
+const buzz = p => { if (!vibre) return; try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} };
 
-/* ================= Stockage : mode essai (local) ================= */
+/* ================= Stockage : mode démo (local) ================= */
 function makeLocalStore() {
-  const KEY = "emmahdf-local";
-  let data = LS.get(KEY, null) || { products: [], orders: [], config: {}, journal: [] };
+  const KEY = "emmahdf-demo";
+  let data = LS.get(KEY, null) || { products: [], categories: [], orders: [], config: {}, journal: [] };
+  data.categories = data.categories || [];
   let h = null, since = 0;
   const save = () => LS.set(KEY, data);
   const emit = () => {
     if (!h) return;
-    h.products(data.products.slice());
+    h.categories(data.categories.slice()); h.products(data.products.slice());
     h.config(Object.assign({}, data.config));
-    h.orders(data.orders.filter(o => (o.t || 0) > since));
+    h.orders(data.orders.filter(o => (o.t || 0) > since).map(o => JSON.parse(JSON.stringify(o))));
     h.journal(data.journal.slice());
   };
+  const up = (arr, obj) => { const i = arr.findIndex(x => x.id === obj.id); if (i >= 0) arr[i] = obj; else arr.push(obj); };
   return {
     kind: "local",
     start(handlers) { h = handlers; emit(); },
     stop() { h = null; },
     watchOrders(ts) { since = ts; emit(); },
-    addProduct(p) { data.products.push(p); save(); emit(); },
+    setProduct(p) { up(data.products, p); save(); emit(); },
     deleteProduct(id) { data.products = data.products.filter(p => p.id !== id); save(); emit(); },
+    setCategory(c) { up(data.categories, c); save(); emit(); },
+    deleteCategory(id) { data.categories = data.categories.filter(c => c.id !== id); save(); emit(); },
     saveOrder(o) { data.orders.push(o); save(); emit(); },
     updateOrder(id, f) { data.orders = data.orders.map(o => o.id === id ? Object.assign({}, o, f) : o); save(); emit(); },
     deleteOrder(id) { data.orders = data.orders.filter(o => o.id !== id); save(); emit(); },
@@ -438,8 +614,8 @@ function makeLocalStore() {
 }
 
 /* ================= Stockage : compte en ligne (Firebase) ================= */
-function makeCloudStore(F, db, compte) {
-  const base = ["comptes", compte];
+function makeCloudStore(F, db, role) {
+  const base = ["espaces", ESPACE];
   const col = n => F.collection(db, ...base, n);
   const dref = (n, id) => F.doc(db, ...base, n, id);
   const J_MAX = 400;
@@ -455,7 +631,6 @@ function makeCloudStore(F, db, compte) {
       if (jMine.events.length >= J_MAX) jMine = { jour: today, k: jMine.k + 1, events: [] };
       const batch = jPending.splice(0, J_MAX - jMine.events.length);
       jMine.events = jMine.events.concat(batch);
-      // Un document par téléphone, par jour et par ouverture de l'appli : jamais d'écrasement entre téléphones
       F.setDoc(dref("journal", today + "_" + deviceId + "_" + sessionId + "_" + jMine.k),
         { dev: deviceId, jour: today, k: jMine.k, maj: Date.now(), events: jMine.events }).catch(fail);
     }
@@ -464,9 +639,10 @@ function makeCloudStore(F, db, compte) {
     kind: "cloud",
     start(handlers) {
       h = handlers;
+      unsubs.push(F.onSnapshot(col("categories"), s => h && h.categories(s.docs.map(withId)), fail));
       unsubs.push(F.onSnapshot(col("produits"), s => h && h.products(s.docs.map(withId)), fail));
       unsubs.push(F.onSnapshot(dref("config", "etat"), s => h && h.config(s.exists() ? s.data() : {}), fail));
-      unsubs.push(F.onSnapshot(F.query(col("journal"), F.orderBy("maj", "desc"), F.limit(20)),
+      if (role === "admin") unsubs.push(F.onSnapshot(F.query(col("journal"), F.orderBy("maj", "desc"), F.limit(20)),
         s => { jDocs = s.docs.map(d => ({ id: d.id, events: d.data().events || [] })); emitJournal(); }, fail));
     },
     stop() { flush(); unsubs.forEach(u => u()); unsubs = []; if (ordersUnsub) ordersUnsub(); ordersUnsub = null; h = null; },
@@ -475,15 +651,39 @@ function makeCloudStore(F, db, compte) {
       ordersUnsub = F.onSnapshot(F.query(col("commandes"), F.where("t", ">", ts), F.orderBy("t", "desc")),
         s => h && h.orders(s.docs.map(withId)), fail);
     },
-    addProduct(p) { const { id, ...b } = p; F.setDoc(dref("produits", id), b).catch(fail); },
+    setProduct(p) { const { id, ...b } = p; F.setDoc(dref("produits", id), b).catch(fail); },
     deleteProduct(id) { F.deleteDoc(dref("produits", id)).catch(fail); },
+    setCategory(c) { const { id, ...b } = c; F.setDoc(dref("categories", id), b).catch(fail); },
+    deleteCategory(id) { F.deleteDoc(dref("categories", id)).catch(fail); },
     saveOrder(o) { const { id, ...b } = o; F.setDoc(dref("commandes", id), b).catch(fail); },
     updateOrder(id, f) { F.updateDoc(dref("commandes", id), f).catch(fail); },
     deleteOrder(id) { F.deleteDoc(dref("commandes", id)).catch(fail); },
     setConfig(c) { F.setDoc(dref("config", "etat"), c, { merge: true }).catch(fail); },
     log(e) { jPending.push(e); emitJournal(); clearTimeout(jTimer); jTimer = setTimeout(flush, 800); },
     allOrders() { return F.getDocs(col("commandes")).then(s => s.docs.map(withId)); },
-    allJournal() { return F.getDocs(col("journal")).then(s => { let ev = []; s.docs.forEach(d => { ev = ev.concat(d.data().events || []); }); return ev.concat(jPending); }); }
+    allJournal() { return F.getDocs(col("journal")).then(s => { let ev = []; s.docs.forEach(d => { ev = ev.concat(d.data().events || []); }); return ev.concat(jPending); }); },
+    listMembers() { return F.getDocs(col("membres")).then(s => s.docs.map(d => Object.assign({ uid: d.id }, d.data()))); },
+    setMember(uid, d) { return F.setDoc(dref("membres", uid), d); },
+    deleteMember(uid) { return F.deleteDoc(dref("membres", uid)); },
+    async importLegacy(compte, progress) {
+      const old = n => F.collection(db, "comptes", compte, n);
+      const [pr, co, jo, cf] = await Promise.all([F.getDocs(old("produits")), F.getDocs(old("commandes")), F.getDocs(old("journal")),
+        F.getDoc(F.doc(db, "comptes", compte, "config", "etat"))]);
+      const ops = [];
+      pr.docs.forEach(d => ops.push([dref("produits", d.id), d.data()]));
+      co.docs.forEach(d => ops.push([dref("commandes", d.id), Object.assign({}, d.data(), { service: "servie", importe: true })]));
+      jo.docs.forEach(d => ops.push([dref("journal", "ancien_" + d.id), d.data()]));
+      for (let i = 0; i < ops.length; i += 400) {
+        const b = F.writeBatch(db);
+        ops.slice(i, i + 400).forEach(([r, dt]) => b.set(r, dt, { merge: true }));
+        await b.commit();
+        progress(Math.min(i + 400, ops.length), ops.length);
+      }
+      const conf = { importe: Date.now() };
+      if (cf.exists() && cf.data().resetAt && !S.config.resetAt) conf.resetAt = cf.data().resetAt;
+      await F.setDoc(dref("config", "etat"), conf, { merge: true });
+      return { produits: pr.size, commandes: co.size, journal: jo.size };
+    }
   };
 }
 
@@ -501,19 +701,16 @@ function loadFirebase() {
       const app = A.initializeApp(cfg);
       const auth = Au.getAuth(app);
       let db;
-      try { db = F.initializeFirestore(app, { localCache: F.persistentLocalCache({ tabManager: F.persistentMultipleTabManager() }) }); }
+      try { db = F.initializeFirestore(app, { ignoreUndefinedProperties: true, localCache: F.persistentLocalCache({ tabManager: F.persistentMultipleTabManager() }) }); }
       catch (e) { db = F.getFirestore(app); }
-      FB = { Au, F, auth, db };
+      if (window.EMMAHDF_EMULATEUR) { Au.connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true }); F.connectFirestoreEmulator(db, "127.0.0.1", 8080); }
+      FB = { A, Au, F, auth, db, app };
       Au.onAuthStateChanged(auth, user => {
         if (user) {
-          if (LS.get("emmahdf-mode", null) === "local") return;
-          const compte = (user.email || "").split("@")[0];
-          startApp(makeCloudStore(F, db, compte), compte);
-        } else if (store && store.kind === "cloud") {
-          stopApp(); showLogin();
-        } else if (!store) {
-          showLogin();
-        }
+          if (LS.get("emmahdf-mode", null) === "demo") return;
+          openAccount(user);
+        } else if (store && store.kind === "cloud") { stopApp(); showLogin(); }
+        else if (!store) showLogin();
       });
       return FB;
     });
@@ -521,123 +718,174 @@ function loadFirebase() {
   return fbLoading;
 }
 
-/* ================= État de l'application ================= */
-let store = null, acctName = "";
-const S = { products: [], cart: {}, orders: [], resetAt: null, journal: [], query: "", filter: "toutes", editing: false, journalOpen: false, ordersShown: 50, jShown: 300, loaded: false };
+const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), ms))]);
+
+async function openAccount(user) {
+  const { F, db } = FB;
+  const identifiant = (user.email || "").split("@")[0];
+  const ref = F.doc(db, "espaces", ESPACE, "membres", user.uid);
+  const cacheKey = "emmahdf-role-" + user.uid;
+  let role = null;
+  try {
+    const snap = await withTimeout(F.getDoc(ref), 10000);
+    if (snap.exists()) role = snap.data().role;
+    else {
+      // Premier passage de l'administrateur : il s'enregistre lui-même (autorisé seulement pour lui par les règles)
+      try { await withTimeout(F.setDoc(ref, { identifiant, role: "admin", cree: Date.now() }), 10000); role = "admin"; }
+      catch (e) { role = null; }
+    }
+  } catch (e) { role = LS.get(cacheKey, null); }
+  if (!role || !ROLES[role]) { LS.del(cacheKey); showNoAccess(identifiant); return; }
+  LS.set(cacheKey, role);
+  startApp(makeCloudStore(F, db, role), { role, identifiant });
+}
+
+/* ================= État ================= */
+let store = null, me = { role: "admin", identifiant: "" };
+const S = {
+  products: [], categories: [], cart: {}, orders: [], config: {}, resetAt: null, journal: [],
+  query: "", catFilter: "all", filter: "toutes", editing: false, journalOpen: false, ordersShown: 50, jShown: 300, loaded: false,
+  view: "caisse", svTab: "afaire", knownOrders: null, knownAlerts: null
+};
+const isAdmin = () => me.role === "admin";
+const canCaisse = () => me.role === "admin" || me.role === "caisse";
 
 function logEvent(a, f) {
   if (!store) return;
-  const e = { t: Date.now(), a, dev: deviceId };
+  const e = { t: Date.now(), a, dev: deviceId, r: me.role };
   if (vendeur) e.v = vendeur;
   if (f) for (const k in f) if (f[k] !== undefined && f[k] !== null && f[k] !== "") e[k] = f[k];
   store.log(e);
 }
 
-function startApp(st, name) {
+function startApp(st, info) {
   if (store) stopApp();
-  store = st; acctName = name || "";
-  Object.assign(S, { products: [], cart: {}, orders: [], resetAt: null, journal: [], query: "", editing: false, loaded: false });
+  store = st; me = info;
+  Object.assign(S, { products: [], categories: [], cart: {}, orders: [], config: {}, resetAt: null, journal: [], query: "", catFilter: "all", editing: false, loaded: false, knownOrders: null, knownAlerts: null });
+  S.view = me.role === "service" ? "service" : me.role === "caisse" ? "caisse" : LS.get("emmahdf-view", "caisse");
   $("search").value = "";
-  $("login").hidden = true; $("app").hidden = false;
-  $("acctLabel").textContent = st.kind === "cloud" ? "Compte : " + acctName : "Mode essai";
+  $("login").hidden = true; $("noAccess").hidden = true; $("app").hidden = false;
+  $("acctLabel").textContent = st.kind === "local" ? "Mode démo (administrateur)" : ROLES[me.role] + " · " + me.identifiant;
+  $("viewSwitch").hidden = !isAdmin();
   st.start({
+    categories(list) { S.categories = list.sort((a, b) => (a.ordre || 0) - (b.ordre || 0)); render(); refreshSheets(); if (!$("prodSheet").hidden) renderProdChoices(); },
     products(list) { S.products = list.sort((a, b) => (a.ordre || 0) - (b.ordre || 0)); S.loaded = true; render(); },
-    config(c) {
-      const r = c.resetAt || 0;
-      if (r !== S.resetAt) { S.resetAt = r; st.watchOrders(r); }
-      render();
-    },
-    orders(list) { S.orders = list; render(); },
+    config(c) { S.config = c || {}; const r = S.config.resetAt || 0; if (r !== S.resetAt) { S.resetAt = r; S.knownOrders = null; st.watchOrders(r); } render(); if (!$("menuSheet").hidden) renderFond(); },
+    orders(list) { S.orders = list; detectNews(); render(); },
     journal(ev) { S.journal = ev; if (S.journalOpen) renderJournal(); },
     error(e) { showErr(e && e.code === "permission-denied" ? "Accès refusé par la base : vérifie les règles Firestore (voir le guide)." : "Erreur de synchronisation : " + ((e && (e.message || e.code)) || "inconnue")); }
   });
-  logEvent("connexion", { d: st.kind === "cloud" ? "Compte " + acctName : "Mode essai" });
-  setSync();
-  updateInstallCard();
+  logEvent("connexion", { d: st.kind === "cloud" ? ROLES[me.role] + " (" + me.identifiant + ")" : "Mode démo" });
+  setSync(); updateInstallCard(); applyView();
 }
-function stopApp() { if (store) store.stop(); store = null; $("app").hidden = true; closeSheet(); $("settings").hidden = true; }
-
+function stopApp() {
+  if (store) store.stop(); store = null;
+  $("app").hidden = true;
+  document.querySelectorAll(".overlay").forEach(o => { o.hidden = true; });
+  S.journalOpen = false;
+}
 function showLogin() {
-  $("app").hidden = true; $("login").hidden = false;
+  $("app").hidden = true; $("noAccess").hidden = true; $("login").hidden = false;
   $("lVendeur").value = vendeur;
   $("cfgMissing").hidden = cfgValid;
-  $("loginArea").hidden = !cfgValid;
+  $("loginForm").hidden = !cfgValid;
+}
+function showNoAccess(id) {
+  stopApp();
+  $("login").hidden = true; $("noAccess").hidden = false;
+  $("noAccessText").textContent = "Le compte « " + id + " » n'a pas encore de droits dans l'application. Demande à l'administrateur de l'association.";
+}
+$("noAccessLogout").onclick = async () => { if (FB) await FB.Au.signOut(FB.auth); $("noAccess").hidden = true; showLogin(); };
+
+/* Nouvelles commandes (service) et alertes (caisse) : vibration */
+function detectNews() {
+  const sess = sessionOrders();
+  const ids = new Set(sess.map(o => o.id));
+  if (S.knownOrders && (me.role === "service" || S.view === "service")) {
+    const fresh = sess.filter(o => !S.knownOrders.has(o.id) && o.service !== "servie");
+    if (fresh.length) { buzz([200, 100, 200]); S.flash = new Set(fresh.map(o => o.id)); }
+  }
+  S.knownOrders = ids;
+  const alerts = new Set(sess.filter(o => o.alerte && !o.alerteVue).map(o => o.id + ":" + o.alerte));
+  if (S.knownAlerts && canCaisse() && S.view === "caisse") { for (const a of alerts) if (!S.knownAlerts.has(a)) { buzz([300, 100, 300]); break; } }
+  S.knownAlerts = alerts;
 }
 
 /* ================= Connexion ================= */
-let createMode = false;
-function setTab(c) {
-  createMode = c;
-  $("tabLogin").setAttribute("aria-selected", String(!c));
-  $("tabCreate").setAttribute("aria-selected", String(c));
-  $("createFields").hidden = !c;
-  $("lPw").autocomplete = c ? "new-password" : "current-password";
-  $("lSubmit").textContent = c ? "Créer le compte" : "Se connecter";
-  $("lHint").textContent = "";
-}
-$("tabLogin").onclick = () => setTab(false);
-$("tabCreate").onclick = () => setTab(true);
-
 const AUTH_ERR = {
   "auth/invalid-credential": "Identifiant ou mot de passe incorrect.",
   "auth/invalid-login-credentials": "Identifiant ou mot de passe incorrect.",
   "auth/wrong-password": "Identifiant ou mot de passe incorrect.",
   "auth/user-not-found": "Identifiant ou mot de passe incorrect.",
-  "auth/email-already-in-use": "Cet identifiant est déjà utilisé. Choisis-en un autre ou connecte-toi.",
+  "auth/email-already-in-use": "Cet identifiant existe déjà.",
   "auth/weak-password": "Le mot de passe doit faire au moins 6 caractères.",
-  "auth/network-request-failed": "Pas de connexion internet. La première connexion sur un téléphone demande du réseau.",
+  "auth/network-request-failed": "Pas de connexion internet. La première connexion sur un appareil demande du réseau.",
   "auth/too-many-requests": "Trop d'essais. Patiente quelques minutes puis réessaie.",
-  "auth/operation-not-allowed": "La connexion par identifiant n'est pas activée dans Firebase (voir le guide, étape 2).",
-  "auth/unauthorized-domain": "Ce site n'est pas autorisé dans Firebase (voir le guide, étape 7)."
+  "auth/operation-not-allowed": "La connexion par identifiant n'est pas activée dans Firebase.",
+  "auth/unauthorized-domain": "Ce site n'est pas autorisé dans Firebase (domaines autorisés)."
 };
+const validId = id => /^[a-z0-9_-]{3,30}$/.test(id);
 
 $("loginForm").addEventListener("submit", async ev => {
   ev.preventDefault();
-  const id = $("lId").value.trim().toLowerCase();
-  const pw = $("lPw").value;
-  const hint = $("lHint");
-  if (!/^[a-z0-9_-]{3,30}$/.test(id)) { hint.textContent = "L'identifiant doit faire 3 à 30 caractères : lettres sans accent, chiffres, - ou _."; return; }
-  if (pw.length < 6) { hint.textContent = "Le mot de passe doit faire au moins 6 caractères."; return; }
-  if (createMode && pw !== $("lPw2").value) { hint.textContent = "Les deux mots de passe ne sont pas identiques."; return; }
+  const id = $("lId").value.trim().toLowerCase(), pw = $("lPw").value, hint = $("lHint");
+  if (!validId(id)) { hint.textContent = "L'identifiant fait 3 à 30 caractères : lettres sans accent, chiffres, - ou _."; return; }
+  if (pw.length < 6) { hint.textContent = "Le mot de passe fait au moins 6 caractères."; return; }
   vendeur = $("lVendeur").value.trim(); LS.set("emmahdf-vendeur", vendeur);
   hint.textContent = ""; $("lSubmit").disabled = true;
   try {
     const { Au, auth } = await loadFirebase();
     await Au.setPersistence(auth, Au.browserLocalPersistence);
-    const email = id + "@" + ID_DOMAIN;
     LS.del("emmahdf-mode");
-    if (createMode) await Au.createUserWithEmailAndPassword(auth, email, pw);
-    else await Au.signInWithEmailAndPassword(auth, email, pw);
-    $("lPw").value = ""; $("lPw2").value = "";
-  } catch (e) {
-    hint.textContent = AUTH_ERR[e && e.code] || ("Connexion impossible : " + ((e && (e.code || e.message)) || "erreur inconnue"));
-  }
+    await Au.signInWithEmailAndPassword(auth, id + "@" + ID_DOMAIN, pw);
+    $("lPw").value = "";
+  } catch (e) { hint.textContent = AUTH_ERR[e && e.code] || ("Connexion impossible : " + ((e && (e.code || e.message)) || "erreur inconnue")); }
   $("lSubmit").disabled = false;
 });
-
-$("localBtn").onclick = () => {
+$("demoBtn").onclick = () => {
   vendeur = $("lVendeur").value.trim() || vendeur; LS.set("emmahdf-vendeur", vendeur);
-  LS.set("emmahdf-mode", "local");
-  startApp(makeLocalStore(), "");
+  LS.set("emmahdf-mode", "demo");
+  startApp(makeLocalStore(), { role: "admin", identifiant: "démo" });
 };
 
-/* ================= Affichage ================= */
+/* ================= Vues ================= */
+function applyView() {
+  const svc = S.view === "service";
+  $("caisseHead").hidden = svc; $("caisseView").hidden = svc;
+  $("serviceHead").hidden = !svc; $("serviceView").hidden = !svc;
+  $("wrap").classList.toggle("wide", svc);
+  document.querySelectorAll("#viewSwitch button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.view === S.view)));
+  $("vibBtn").textContent = vibre ? "Vibration : activée" : "Vibration : désactivée";
+  render();
+}
+document.querySelectorAll("#viewSwitch button").forEach(b => b.onclick = () => { S.view = b.dataset.view; LS.set("emmahdf-view", S.view); applyView(); window.scrollTo(0, 0); });
+$("vibBtn").onclick = () => { vibre = !vibre; LS.set("emmahdf-vibre", vibre); if (vibre) buzz(80); applyView(); };
+document.querySelectorAll("[data-sv]").forEach(b => b.onclick = () => { S.svTab = b.dataset.sv; document.querySelectorAll("[data-sv]").forEach(x => x.setAttribute("aria-pressed", String(x === b))); render(); });
+setInterval(() => { if (store && S.view === "service") renderService(); }, 30000);
+
 function sessionOrders() { return S.orders.filter(o => (o.t || 0) > (S.resetAt || 0)); }
-function findProduct(pid) { return S.products.find(p => p.id === pid) || null; }
+const catById = id => S.categories.find(c => c.id === id) || null;
+const findProduct = pid => S.products.find(p => p.id === pid) || null;
 function cartItems() {
   const out = [];
-  S.products.forEach(p => { const q = S.cart[p.id] || 0; if (q > 0) out.push({ pid: p.id, nom: p.nom, prix: p.prix || 0, q }); });
+  S.products.forEach(p => {
+    const q = S.cart[p.id] || 0; if (q <= 0) return;
+    const c = catById(p.cat);
+    out.push({ pid: p.id, nom: p.nom, prix: p.prix || 0, q, cat: c ? c.id : null, catNom: c ? c.nom : null, couleur: c ? c.couleur : null, type: p.type || null, servi: false, indispo: false });
+  });
   return out;
 }
 
 function render() {
   if (!store) return;
-  const list = $("list");
+  if (S.view === "service") renderService(); else renderCaisse();
+}
+
+/* ================= Caisse ================= */
+function renderCaisse() {
   $("loading").hidden = S.loaded;
-  $("empty").hidden = !S.loaded || S.products.length > 0;
-  document.body.classList.toggle("editing", S.editing);
-  $("editBtn").textContent = S.editing ? "Terminé" : "Supprimer des produits";
-  $("editBtn").hidden = S.products.length === 0 && !S.editing;
+  $("adminBar").hidden = !isAdmin() || S.editing;
+  $("editBar").hidden = !S.editing;
 
   const sess = sessionOrders(), sold = {}, byM = { especes: 0, carte: 0, autre: 0 };
   let paid = 0, unpaid = 0, nUnpaid = 0;
@@ -646,66 +894,116 @@ function render() {
     if (o.statut === "paye") { paid += o.total || 0; byM[o.moyen || "autre"] = (byM[o.moyen || "autre"] || 0) + (o.total || 0); }
     else { unpaid += o.total || 0; nUnpaid++; }
   });
-
-  const q = norm(S.query), seen = {};
-  let shown = 0;
-  S.products.forEach(p => {
-    const inCart = S.cart[p.id] || 0, s = sold[p.id] || 0;
-    seen[p.id] = true;
-    let li = list.querySelector('[data-id="' + p.id + '"]');
-    if (!li) {
-      li = document.createElement("li"); li.className = "item"; li.dataset.id = p.id;
-      li.innerHTML = '<div class="name"><span class="n"></span><span class="meta"></span></div>' +
-        '<button class="minus" type="button">−</button><span class="count">0</span>' +
-        '<button class="plus" type="button">+</button><button class="del" type="button">Supprimer</button>';
-      li.querySelector(".plus").onclick = () => change(p.id, 1);
-      li.querySelector(".minus").onclick = () => change(p.id, -1);
-      li.querySelector(".del").onclick = () => removeProduct(p.id);
-    }
-    list.appendChild(li);
-    const match = !q || norm(p.nom).includes(q);
-    li.hidden = !match; if (match) shown++;
-    li.classList.toggle("incart", inCart > 0);
-    li.querySelector(".n").textContent = p.nom;
-    li.querySelector(".meta").textContent = (p.prix ? fmt(p.prix) : "Sans prix") + " · " + plural(s, "vendu", "vendus");
-    li.querySelector(".plus").setAttribute("aria-label", "Ajouter à la commande : " + p.nom);
-    li.querySelector(".minus").setAttribute("aria-label", "Retirer de la commande : " + p.nom);
-    li.querySelector(".del").setAttribute("aria-label", "Supprimer " + p.nom);
-    const c = li.querySelector(".count");
-    if (c.textContent !== String(inCart)) c.textContent = inCart;
-    c.classList.toggle("zero", inCart === 0);
-    li.querySelector(".minus").disabled = inCart <= 0;
-  });
-  [...list.children].forEach(li => { if (!seen[li.dataset.id]) li.remove(); });
-
-  const nm = $("noMatch");
-  nm.hidden = !(q && S.products.length && shown === 0);
-  if (!nm.hidden) nm.textContent = "Aucun produit ne correspond à « " + S.query.trim() + " ». Tu peux l'ajouter ci-dessous.";
-
   $("totalEur").textContent = fmt(paid);
   $("totalSub").textContent = "encaissé · " + plural(sess.length, "commande", "commandes");
-  if (unpaid > 0) { const b = document.createElement("b"); b.textContent = " · " + fmt(unpaid) + " à encaisser"; $("totalSub").appendChild(b); }
+  if (unpaid > 0) $("totalSub").appendChild(el("b", null, " · " + fmt(unpaid) + " à encaisser"));
   $("stEsp").textContent = fmt(byM.especes); $("stCarte").textContent = fmt(byM.carte);
   $("stAutre").textContent = fmt(byM.autre); $("stNon").textContent = fmt(unpaid);
+  S.byM = byM;
 
-  const items = cartItems();
-  let n = 0, tot = 0;
+  // Alertes du service
+  const al = $("alerts"); al.textContent = "";
+  sess.filter(o => o.alerte && !o.alerteVue).forEach(o => {
+    const d = el("div", "alert");
+    d.append(el("span", null, "⚠ #" + (o.num || "?") + " " + (o.client || "") + (o.table ? " (table " + o.table + ")" : "") + " : " + o.alerte));
+    const b = el("button", null, "Vu"); b.type = "button";
+    b.onclick = () => { store.updateOrder(o.id, { alerteVue: true }); logEvent("alerte_vue", { c: o.client, d: o.alerte }); };
+    d.append(b); al.append(d);
+  });
+
+  // Onglets de catégorie
+  const tabs = $("catTabs"); tabs.textContent = "";
+  const hasNoCat = S.products.some(p => !catById(p.cat));
+  const mkChip = (key, label, color) => {
+    const b = el("button", "chip"); b.type = "button"; b.setAttribute("aria-pressed", String(S.catFilter === key));
+    if (color) { const d = el("span", "dot"); d.style.background = color; b.append(d); b.style.background = rgba(color, .12); }
+    b.append(label); b.onclick = () => { S.catFilter = key; render(); }; tabs.append(b);
+  };
+  if (S.categories.length) {
+    mkChip("all", "Tout");
+    S.categories.forEach(c => mkChip(c.id, c.nom, c.couleur));
+    if (hasNoCat) mkChip("none", "Autres");
+  }
+  tabs.hidden = !S.categories.length;
+  if (S.catFilter !== "all" && S.catFilter !== "none" && !catById(S.catFilter)) S.catFilter = "all";
+
+  // Produits regroupés par catégorie
+  const list = $("list"); list.textContent = "";
+  const q = norm(S.query);
+  const groups = S.categories.map(c => ({ c, items: [] }));
+  const others = { c: null, items: [] };
+  S.products.forEach(p => { const g = groups.find(x => x.c.id === p.cat); (g || others).items.push(p); });
+  groups.push(others);
+  let shown = 0;
+  groups.forEach(g => {
+    if (S.catFilter === "none" && g.c) return;
+    if (S.catFilter !== "all" && S.catFilter !== "none" && (!g.c || g.c.id !== S.catFilter)) return;
+    const items = g.items.filter(p => !q || norm(p.nom).includes(q));
+    if (!items.length) return;
+    if (S.categories.length) {
+      const hd = el("li", "grouphead"); const d = el("span", "dot");
+      d.style.background = g.c ? g.c.couleur : "var(--sand)"; hd.append(d, g.c ? g.c.nom : "Autres"); list.append(hd);
+    }
+    items.forEach(p => { list.append(productCard(p, g.c, sold[p.id] || 0)); shown++; });
+  });
+  $("empty").hidden = !S.loaded || S.products.length > 0;
+  $("empty").textContent = isAdmin() ? "Aucun produit pour l'instant. Commence par créer tes catégories (Menu → Catégories et couleurs), puis ajoute tes produits avec « ＋ Nouveau produit »." : "Aucun produit pour l'instant. L'administrateur doit d'abord les ajouter.";
+  const nm = $("noMatch"); nm.textContent = "";
+  nm.hidden = !(q && S.products.length && shown === 0);
+  if (!nm.hidden) {
+    nm.append("Aucun produit ne correspond à « " + S.query.trim() + " ».");
+    if (isAdmin()) { const b = el("button", "ghost full", "＋ Créer « " + S.query.trim() + " »"); b.type = "button"; b.style.marginTop = "8px"; b.onclick = () => openProduct(null, S.query.trim()); nm.append(b); }
+  }
+
+  // Barre de commande
+  const items = cartItems(); let n = 0, tot = 0;
   items.forEach(i => { n += i.q; tot += i.q * i.prix; });
-  $("cartBar").hidden = n === 0;
-  document.body.classList.toggle("hascart", n > 0);
+  $("cartBar").hidden = n === 0 || S.view !== "caisse";
+  document.body.classList.toggle("hascart", !$("cartBar").hidden);
   $("cartTotal").textContent = fmt(tot);
   $("cartCount").textContent = plural(n, "article", "articles");
 
   renderOrders(sess, nUnpaid);
   renderClients();
-  if (S.journalOpen) renderJournal();
 }
 
-/* Confirmation en deux appuis (suppression, annulation de paiement…) */
+function productCard(p, c, sold) {
+  const li = el("li", "item"); li.dataset.id = p.id;
+  const color = c ? c.couleur : null;
+  if (color) { li.style.background = rgba(color, .13); li.style.borderColor = rgba(color, .55); }
+  const inCart = S.cart[p.id] || 0;
+  if (inCart) li.classList.add("incart");
+  const name = el("div", "name"); name.append(el("span", null, p.nom));
+  name.append(el("span", "meta", (p.prix ? fmt(p.prix) : "Sans prix") + (p.type ? " · " + TYPES[p.type] : "") + " · " + plural(sold, "vendu", "vendus")));
+  li.append(name);
+  if (S.editing) {
+    const e = el("button", "editp", "Modifier"); e.type = "button"; e.onclick = () => openProduct(p); li.append(e);
+    li.style.gridTemplateColumns = "1fr auto";
+    return li;
+  }
+  const minus = el("button", "minus", "−"); minus.type = "button"; minus.disabled = inCart <= 0;
+  minus.setAttribute("aria-label", "Retirer de la commande : " + p.nom); minus.onclick = () => change(p.id, -1);
+  const count = el("span", "count" + (inCart ? "" : " zero"), String(inCart));
+  if (S.bump === p.id) { count.classList.add("bump"); S.bump = null; }
+  const plus = el("button", "plus", "+"); plus.type = "button";
+  plus.setAttribute("aria-label", "Ajouter à la commande : " + p.nom); plus.onclick = () => change(p.id, 1);
+  if (color) { plus.style.background = color; plus.style.color = textOn(color); }
+  li.append(minus, count, plus);
+  return li;
+}
+
 let armed = null, armedTimer = null;
 function twoTap(key, action) {
-  if (armed !== key) { armed = key; clearTimeout(armedTimer); armedTimer = setTimeout(() => { armed = null; render(); }, 4000); render(); return; }
+  if (armed !== key) { armed = key; clearTimeout(armedTimer); armedTimer = setTimeout(() => { armed = null; render(); refreshSheets(); }, 4000); render(); refreshSheets(); return; }
   armed = null; clearTimeout(armedTimer); action();
+}
+function refreshSheets() { if (!$("catSheet").hidden) renderCats(); if (!$("accSheet").hidden) renderMembers(); if (!$("prodSheet").hidden) renderProdDelete(); if (!$("menuSheet").hidden) renderMenuLinks(); }
+
+function serviceBadge(o) {
+  const items = o.items || [];
+  const done = items.filter(i => i.servi).length, ko = items.filter(i => i.indispo).length;
+  if (o.service === "servie") return el("span", "svcbadge done", "Servie ✓" + (ko ? " · " + ko + " indispo" : ""));
+  return el("span", "svcbadge", "À faire" + (done ? " · " + done + "/" + items.length + " servis" : "") + (ko ? " · " + ko + " indispo" : ""));
 }
 
 function renderOrders(sess, nUnpaid) {
@@ -713,79 +1011,497 @@ function renderOrders(sess, nUnpaid) {
   const rows = sess.filter(o => S.filter === "toutes" || o.statut !== "paye").sort((a, b) => b.t - a.t);
   $("ordersTitle").textContent = "Commandes" + (nUnpaid ? " (" + nUnpaid + " non payée" + (nUnpaid > 1 ? "s" : "") + ")" : "");
   rows.slice(0, S.ordersShown).forEach(o => {
-    const li = document.createElement("li"); li.className = "order";
-    const head = document.createElement("div"); head.className = "ohead";
-    const c = document.createElement("span"); c.className = "oc"; c.textContent = o.client || "Client";
-    const t = document.createElement("span"); t.className = "ot"; t.textContent = hm(o.t) + (o.v ? " · " + o.v : "");
-    head.append(c, t);
-    const it = document.createElement("div"); it.className = "oitems"; it.textContent = summary(o.items);
-    const foot = document.createElement("div"); foot.className = "ofoot";
-    const tot = document.createElement("span"); tot.className = "otot"; tot.textContent = fmt(o.total);
-    const st = document.createElement("button"); st.type = "button";
+    const li = el("li", "order");
+    const head = el("div", "ohead");
+    const c = el("span", "oc"); if (o.num) c.append(el("span", "onum", "#" + o.num)); c.append(o.client || "Client");
+    head.append(c, el("span", "ot", hm(o.t) + (o.v ? " · " + o.v : "")));
+    const where = o.emporter ? "À emporter" : (o.table ? "Table " + o.table : "");
+    const it = el("div", "oitems", (where ? where + " · " : "") + summary(o.items));
+    li.append(head, it);
+    if (o.note) li.append(el("div", "onote", "📝 " + o.note));
+    const foot = el("div", "ofoot");
+    foot.append(el("span", "otot", fmt(o.total)));
+    if (!o.importe) foot.append(serviceBadge(o));
+    const st = el("button"); st.type = "button";
     if (o.statut === "paye") {
       const k = "unpay:" + o.id;
       st.className = "badge paye" + (armed === k ? " armed" : "");
       st.textContent = armed === k ? "Annuler le paiement ?" : "✓ " + statutLabel(o);
       st.onclick = () => twoTap(k, () => markUnpaid(o));
-    } else {
-      st.className = "badge non_paye";
-      st.textContent = "Non payé · Encaisser";
-      st.onclick = () => openPay(o);
+    } else { st.className = "badge non_paye"; st.textContent = "Non payé · Encaisser"; st.onclick = () => openPay(o); }
+    foot.append(st);
+    if (isAdmin()) {
+      const kd = "del:" + o.id, del = el("button", "odel" + (armed === kd ? " armed" : ""), armed === kd ? "Confirmer" : "Supprimer");
+      del.type = "button"; del.onclick = () => twoTap(kd, () => deleteOrder(o)); foot.append(del);
     }
-    const del = document.createElement("button"); del.type = "button";
-    const kd = "del:" + o.id;
-    del.className = "odel" + (armed === kd ? " armed" : "");
-    del.textContent = armed === kd ? "Confirmer" : "Supprimer";
-    del.onclick = () => twoTap(kd, () => deleteOrder(o));
-    foot.append(tot, st, del);
-    li.append(head, it, foot);
-    ul.appendChild(li);
+    li.append(foot); ul.append(li);
   });
   $("noOrders").hidden = rows.length > 0;
   $("noOrders").textContent = S.filter === "toutes" ? "Aucune commande pour l'instant." : "Toutes les commandes sont payées.";
   $("ordersMore").hidden = rows.length <= S.ordersShown;
 }
-
 function renderClients() {
   const seen = {}, dl = $("clientsList"); dl.textContent = "";
-  S.orders.forEach(o => { const k = norm(o.client); if (!k || seen[k]) return; seen[k] = 1; const op = document.createElement("option"); op.value = o.client; dl.appendChild(op); });
+  S.orders.forEach(o => { const k = norm(o.client); if (!k || seen[k]) return; seen[k] = 1; const op = document.createElement("option"); op.value = o.client; dl.append(op); });
 }
-
-document.querySelectorAll(".seg button").forEach(b => b.onclick = () => {
+document.querySelectorAll("[data-f]").forEach(b => b.onclick = () => {
   S.filter = b.dataset.f; S.ordersShown = 50;
-  document.querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
-  render();
+  document.querySelectorAll("[data-f]").forEach(x => x.setAttribute("aria-pressed", String(x === b))); render();
 });
 $("ordersMore").onclick = () => { S.ordersShown += 50; render(); };
-
-$("search").addEventListener("input", e => {
-  S.query = e.target.value;
-  if (!$("pName").value || $("pName").dataset.fromSearch === "1") { $("pName").value = S.query.trim(); $("pName").dataset.fromSearch = "1"; }
-  render();
-});
-$("pName").addEventListener("input", () => { $("pName").dataset.fromSearch = "0"; });
+$("search").addEventListener("input", e => { S.query = e.target.value; render(); });
 
 function setSync() {
-  const el = $("sync"); el.classList.remove("err");
-  if (!store) return;
-  if (store.kind === "local") el.textContent = "Mode essai : données enregistrées sur ce téléphone uniquement";
-  else el.textContent = navigator.onLine ? "Synchronisé avec tous les téléphones du compte" : "Hors ligne : les ventes sont gardées et seront envoyées au retour du réseau";
+  [$("sync"), $("sync2")].forEach(e => {
+    e.classList.remove("err");
+    if (!store) return;
+    if (store.kind === "local") e.textContent = "Mode démo : données sur cet appareil uniquement";
+    else e.textContent = navigator.onLine ? "" : "Hors ligne : tout est gardé et sera envoyé au retour du réseau";
+  });
 }
-function showErr(msg) { const el = $("sync"); el.textContent = msg; el.classList.add("err"); }
+function showErr(msg) { [$("sync"), $("sync2")].forEach(e => { e.textContent = msg; e.classList.add("err"); }); }
 window.addEventListener("online", setSync);
 window.addEventListener("offline", setSync);
 
-/* ================= Journal ================= */
+/* ================= Commande en cours ================= */
+function change(pid, delta) {
+  const q = (S.cart[pid] || 0) + delta;
+  if (q < 0) return;
+  if (q === 0) delete S.cart[pid]; else S.cart[pid] = q;
+  try { if (navigator.vibrate && vibre) navigator.vibrate(delta > 0 ? 12 : 6); } catch (e) {}
+  S.bump = pid; render();
+}
+$("cartClear").onclick = () => {
+  const items = cartItems();
+  if (items.length) logEvent("panier_vide", { d: summary(items), tot: round2(items.reduce((s, i) => s + i.q * i.prix, 0)) });
+  S.cart = {}; render();
+};
+
+let sheet = { mode: null, order: null, moyen: "especes", total: 0 };
+function setMoyen(v) {
+  sheet.moyen = v;
+  document.querySelectorAll(".pay button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === v)));
+  $("cashBox").hidden = v !== "especes";
+  $("sConfirm").textContent = sheet.mode === "pay" ? "Marquer comme payé" : (v === "non_paye" ? "Envoyer (non payé)" : "Confirmer la vente");
+  updateRendu();
+}
+document.querySelectorAll(".pay button").forEach(b => b.onclick = () => setMoyen(b.dataset.v));
+function updateRendu() {
+  const r = $("rendu"), recu = parseMoney($("sRecu").value);
+  r.classList.remove("neg");
+  if (!$("sRecu").value.trim() || isNaN(recu)) { r.textContent = ""; return; }
+  const diff = round2(recu - sheet.total);
+  if (diff >= 0) r.textContent = "À rendre : " + fmt(diff); else { r.textContent = "Il manque " + fmt(-diff); r.classList.add("neg"); }
+}
+$("sRecu").addEventListener("input", updateRendu);
+$("sEmporter").onclick = () => { const on = $("sEmporter").getAttribute("aria-pressed") !== "true"; $("sEmporter").setAttribute("aria-pressed", String(on)); $("sTable").disabled = on; if (on) $("sTable").value = ""; };
+function fillItems(items) {
+  const ul = $("sItems"); ul.textContent = "";
+  items.forEach(i => { const li = el("li"); li.append(el("span", null, i.q + " × " + i.nom), el("span", null, fmt(i.q * i.prix))); ul.append(li); });
+}
+function openConfirm() {
+  const items = cartItems(); if (!items.length) return;
+  sheet = { mode: "new", order: null, moyen: "especes", total: round2(items.reduce((s, i) => s + i.q * i.prix, 0)) };
+  $("sTitle").textContent = "Confirmer la commande #" + nextNum();
+  fillItems(items); $("sTotal").textContent = fmt(sheet.total);
+  $("orderFields").hidden = false; $("optNonPaye").hidden = false;
+  ["sClient", "sTable", "sNote", "sRecu"].forEach(i => { $(i).value = ""; });
+  $("sTable").disabled = false; $("sEmporter").setAttribute("aria-pressed", "false"); $("sHint").textContent = "";
+  setMoyen("especes"); $("overlay").hidden = false;
+  setTimeout(() => $("sClient").focus(), 60);
+}
+function openPay(o) {
+  sheet = { mode: "pay", order: o, moyen: "especes", total: o.total || 0 };
+  $("sTitle").textContent = "Encaisser #" + (o.num || "") + " " + (o.client || "");
+  fillItems(o.items || []); $("sTotal").textContent = fmt(sheet.total);
+  $("orderFields").hidden = true; $("optNonPaye").hidden = true;
+  $("sRecu").value = ""; $("sHint").textContent = "";
+  setMoyen("especes"); $("overlay").hidden = false;
+}
+const nextNum = () => sessionOrders().reduce((m, o) => Math.max(m, o.num || 0), 0) + 1;
+$("cartNext").onclick = openConfirm;
+$("sBack").onclick = () => { $("overlay").hidden = true; };
+$("sClient").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); $("sTable").focus(); } });
+$("sConfirm").onclick = () => {
+  const m = sheet.moyen;
+  const recu = m === "especes" && $("sRecu").value.trim() ? parseMoney($("sRecu").value) : null;
+  if (recu !== null && isNaN(recu)) { $("sHint").textContent = "Le montant reçu doit être un nombre, par exemple 10 ou 12,50."; return; }
+  if (sheet.mode === "pay") {
+    const o = sheet.order, f = { statut: "paye", moyen: m, payeLe: Date.now() };
+    if (recu !== null) f.recu = recu;
+    store.updateOrder(o.id, f);
+    logEvent("paiement", { c: o.client, n: o.num, d: summary(o.items), tot: o.total, st: "paye", m });
+    $("overlay").hidden = true; return;
+  }
+  const client = $("sClient").value.trim();
+  if (!client) { $("sHint").textContent = "Indique le nom du client."; $("sClient").focus(); return; }
+  const items = cartItems(); if (!items.length) { $("overlay").hidden = true; return; }
+  const emporter = $("sEmporter").getAttribute("aria-pressed") === "true";
+  const o = {
+    id: "c" + rid(), num: nextNum(), client, table: emporter ? "" : $("sTable").value.trim(), emporter, note: $("sNote").value.trim(),
+    items, total: sheet.total, statut: m === "non_paye" ? "non_paye" : "paye", moyen: m === "non_paye" ? null : m,
+    t: Date.now(), dev: deviceId, service: "a_faire", servieLe: null
+  };
+  if (recu !== null) o.recu = recu;
+  if (vendeur) o.v = vendeur;
+  store.saveOrder(o);
+  logEvent("commande", { c: client, n: o.num, d: (o.emporter ? "À emporter · " : o.table ? "Table " + o.table + " · " : "") + summary(items), tot: o.total, st: o.statut, m: o.moyen });
+  S.cart = {}; $("overlay").hidden = true;
+  if (S.query) { S.query = ""; $("search").value = ""; }
+  render();
+};
+function markUnpaid(o) { store.updateOrder(o.id, { statut: "non_paye", moyen: null }); logEvent("impaye", { c: o.client, n: o.num, d: summary(o.items), tot: o.total, st: "non_paye" }); }
+function deleteOrder(o) { store.deleteOrder(o.id); logEvent("commande_supprimee", { c: o.client, n: o.num, d: summary(o.items), tot: o.total, st: o.statut, m: o.moyen }); }
+
+/* ================= Service / préparation ================= */
+function renderService() {
+  const sess = sessionOrders().filter(o => !o.importe);
+  const todo = sess.filter(o => o.service !== "servie").sort((a, b) => a.t - b.t);
+  const done = sess.filter(o => o.service === "servie").sort((a, b) => (b.servieLe || b.t) - (a.servieLe || a.t));
+  $("svTabTodo").textContent = "À faire (" + todo.length + ")";
+  $("svTabDone").textContent = "Terminées (" + done.length + ")";
+  const rows = S.svTab === "afaire" ? todo : done;
+  const grid = $("svGrid"); grid.textContent = "";
+  rows.forEach(o => grid.append(serviceCard(o)));
+  $("svEmpty").hidden = rows.length > 0;
+  $("svEmpty").textContent = S.svTab === "afaire" ? "Aucune commande à préparer. Les nouvelles commandes apparaissent ici automatiquement." : "Aucune commande terminée pour l'instant.";
+  S.flash = null;
+}
+function serviceCard(o) {
+  const card = el("div", "svcard");
+  if (S.flash && S.flash.has(o.id)) card.classList.add("flash");
+  const top = el("div", "svtop");
+  top.append(el("span", "svnum", "#" + (o.num || "?")));
+  if (o.emporter) top.append(el("span", "svtable emporter", "À emporter"));
+  else if (o.table) top.append(el("span", "svtable", "Table " + o.table));
+  top.append(el("span", "svtime", o.service === "servie" ? "Servie à " + hm(o.servieLe || o.t) : ago(o.t)));
+  card.append(top, el("div", "svclient", o.client || ""));
+  if (o.note) card.append(el("div", "svnote", "📝 " + o.note));
+  const items = o.items || [];
+  TYPE_ORDER.forEach(tp => {
+    const idx = items.map((it, i) => i).filter(i => (items[i].type || "") === tp);
+    if (!idx.length) return;
+    card.append(el("div", "typehead", TYPE_PLURAL[tp]));
+    idx.forEach(i => {
+      const it = items[i];
+      const row = el("div", "svitem" + (it.servi ? " done" : "") + (it.indispo ? " ko" : ""));
+      const d = el("span", "dot"); d.style.background = it.couleur || "var(--sand)";
+      const b1 = el("button", it.servi ? "on" : "", it.servi ? "Servi ✓" : "Servi"); b1.type = "button";
+      b1.onclick = () => toggleItem(o, i, "servi");
+      const b2 = el("button", "ko" + (it.indispo ? " on" : ""), "Indispo"); b2.type = "button";
+      b2.onclick = () => toggleItem(o, i, "indispo");
+      row.append(d, el("span", "lbl", it.q + " × " + it.nom), b1, b2);
+      card.append(row);
+    });
+  });
+  const foot = el("div", "svfoot");
+  if (o.service === "servie") {
+    const b = el("button", "ghost", "Remettre à faire"); b.type = "button";
+    b.onclick = () => { store.updateOrder(o.id, { service: "a_faire", servieLe: null, majService: Date.now() }); logEvent("remis_a_faire", { c: o.client, n: o.num }); };
+    foot.append(b);
+  } else {
+    const b = el("button", "primary", "Tout servi ✓"); b.type = "button";
+    b.onclick = () => {
+      const its = items.map(it => Object.assign({}, it, { servi: it.indispo ? false : true }));
+      store.updateOrder(o.id, { items: its, service: "servie", servieLe: Date.now(), majService: Date.now() });
+      logEvent("commande_servie", { c: o.client, n: o.num, d: summary(items) });
+    };
+    foot.append(b);
+  }
+  card.append(foot);
+  return card;
+}
+function toggleItem(o, i, field) {
+  const its = (o.items || []).map(it => Object.assign({}, it));
+  const it = its[i];
+  it[field] = !it[field];
+  if (field === "servi" && it.servi) it.indispo = false;
+  if (field === "indispo" && it.indispo) it.servi = false;
+  const allDone = its.every(x => x.servi || x.indispo);
+  const ko = its.filter(x => x.indispo).map(x => x.nom);
+  const f = { items: its, service: allDone ? "servie" : "a_faire", servieLe: allDone ? Date.now() : null, majService: Date.now() };
+  const alerte = ko.length ? "indisponible : " + ko.join(", ") : null;
+  if (alerte !== (o.alerte || null)) { f.alerte = alerte; f.alerteVue = false; }
+  store.updateOrder(o.id, f);
+  logEvent(field === "servi" ? (it.servi ? "servi" : "servi_annule") : (it.indispo ? "indispo" : "indispo_annule"), { c: o.client, n: o.num, p: it.nom, q: it.q });
+  if (allDone) logEvent("commande_servie", { c: o.client, n: o.num });
+}
+
+/* ================= Produits (admin) ================= */
+let prodEdit = null, prodCat = null, prodType = null;
+function openProduct(p, nom) {
+  prodEdit = p || null; prodCat = p ? (p.cat || null) : (S.catFilter !== "all" && S.catFilter !== "none" ? S.catFilter : null); prodType = p ? (p.type || null) : null;
+  $("pTitle").textContent = p ? "Modifier le produit" : "Nouveau produit";
+  $("pName").value = p ? p.nom : (nom || ""); $("pPrice").value = p && p.prix ? String(p.prix).replace(".", ",") : "";
+  $("pHint").textContent = "";
+  renderProdChoices(); renderProdDelete();
+  $("prodSheet").hidden = false; setTimeout(() => $("pName").focus(), 60);
+}
+function renderProdChoices() {
+  const pc = $("pCats"); pc.textContent = "";
+  const mk = (id, label, color) => {
+    const b = el("button", "chip"); b.type = "button"; b.setAttribute("aria-pressed", String(prodCat === id));
+    if (color) { const d = el("span", "dot"); d.style.background = color; b.append(d); b.style.background = rgba(color, .12); }
+    b.append(label); b.onclick = () => { prodCat = id; renderProdChoices(); }; pc.append(b);
+  };
+  mk(null, "Aucune");
+  S.categories.forEach(c => mk(c.id, c.nom, c.couleur));
+  const pt = $("pTypes"); pt.textContent = "";
+  [[null, "Aucun"], ["entree", "Entrée"], ["plat", "Plat"], ["dessert", "Dessert"], ["boisson", "Boisson"]].forEach(([v, l]) => {
+    const b = el("button", "chip", l); b.type = "button"; b.setAttribute("aria-pressed", String(prodType === v));
+    b.onclick = () => { prodType = v; renderProdChoices(); }; pt.append(b);
+  });
+}
+function renderProdDelete() {
+  const b = $("pDelete"); b.hidden = !prodEdit; if (!prodEdit) return;
+  const k = "pdel:" + prodEdit.id; b.classList.toggle("armed", armed === k);
+  b.textContent = armed === k ? "Appuie encore pour supprimer" : "Supprimer ce produit";
+}
+$("pDelete").onclick = () => { const p = prodEdit; twoTap("pdel:" + p.id, () => { delete S.cart[p.id]; store.deleteProduct(p.id); logEvent("suppression", { p: p.nom, prix: p.prix }); $("prodSheet").hidden = true; }); };
+$("pCancel").onclick = () => { $("prodSheet").hidden = true; };
+$("pManageCats").onclick = () => { $("prodSheet").hidden = true; openCats(true); };
+$("pSave").onclick = () => {
+  const nom = $("pName").value.trim(), prix = parseMoney($("pPrice").value), h = $("pHint");
+  if (!nom) { h.textContent = "Donne un nom au produit."; return; }
+  if (isNaN(prix)) { h.textContent = "Le prix doit être un nombre, par exemple 3,50."; return; }
+  if (S.products.some(x => norm(x.nom) === norm(nom) && (!prodEdit || x.id !== prodEdit.id))) { h.textContent = "Un produit porte déjà ce nom."; return; }
+  const p = { id: prodEdit ? prodEdit.id : "p" + rid(), nom, prix, ordre: prodEdit ? (prodEdit.ordre || Date.now()) : Date.now(), cat: prodCat, type: prodType };
+  store.setProduct(p);
+  const c = catById(prodCat);
+  logEvent(prodEdit ? "produit_modifie" : "ajout", { p: nom, prix, d: [c ? c.nom : "", prodType ? TYPES[prodType] : ""].filter(Boolean).join(" · ") });
+  $("prodSheet").hidden = true;
+  if (S.query) { S.query = ""; $("search").value = ""; }
+};
+$("addProdBtn").onclick = () => openProduct(null);
+$("editModeBtn").onclick = () => { S.editing = true; render(); };
+$("editDone").onclick = () => { S.editing = false; render(); };
+
+/* ================= Catégories (admin) ================= */
+let catEdit = null, catColor = PALETTE[0][1], catBackToProduct = false;
+function openCats(back) { catBackToProduct = !!back; resetCatForm(); renderCats(); $("catSheet").hidden = false; }
+function resetCatForm() {
+  catEdit = null; $("cName").value = ""; $("cHint").textContent = "";
+  const used = new Set(S.categories.map(c => c.couleur));
+  catColor = (PALETTE.find(p => !used.has(p[1])) || PALETTE[0])[1];
+  $("cFormTitle").textContent = "Nouvelle catégorie"; $("cSave").textContent = "Ajouter la catégorie"; $("cCancelEdit").hidden = true;
+  renderPalette();
+}
+function renderPalette() {
+  const pal = $("palette"); pal.textContent = "";
+  const used = {}; S.categories.forEach(c => { if (!catEdit || c.id !== catEdit.id) used[c.couleur] = c.nom; });
+  PALETTE.forEach(([nom, hex]) => {
+    const b = el("button", "swatch"); b.type = "button"; b.style.background = hex;
+    b.setAttribute("aria-pressed", String(catColor === hex));
+    b.setAttribute("aria-label", nom + (used[hex] ? " (déjà utilisée par " + used[hex] + ")" : ""));
+    b.title = nom + (used[hex] ? " · déjà utilisée par " + used[hex] : "");
+    if (used[hex]) b.style.opacity = ".45";
+    b.onclick = () => { catColor = hex; renderPalette(); }; pal.append(b);
+  });
+}
+function renderCats() {
+  const box = $("catList"); box.textContent = "";
+  if (!S.categories.length) box.append(el("p", "small", "Aucune catégorie. Crée ta première ci-dessous, par exemple « Bœuf » en rouge."));
+  S.categories.forEach(c => {
+    const r = el("div", "catrow"); const d = el("span", "dot"); d.style.background = c.couleur;
+    const n = S.products.filter(p => p.cat === c.id).length;
+    const e = el("button", null, "Modifier"); e.type = "button";
+    e.onclick = () => { catEdit = c; catColor = c.couleur; $("cName").value = c.nom; $("cFormTitle").textContent = "Modifier « " + c.nom + " »"; $("cSave").textContent = "Enregistrer"; $("cCancelEdit").hidden = false; renderPalette(); $("cName").focus(); };
+    const k = "cdel:" + c.id, x = el("button", armed === k ? "armed" : null, armed === k ? "Confirmer" : "Supprimer"); x.type = "button";
+    x.onclick = () => twoTap(k, () => { store.deleteCategory(c.id); logEvent("categorie_supprimee", { d: c.nom }); if (catEdit && catEdit.id === c.id) resetCatForm(); });
+    r.append(d, el("span", null, c.nom + " (" + plural(n, "produit", "produits") + ")"), e, x); box.append(r);
+  });
+}
+$("cCancelEdit").onclick = resetCatForm;
+$("cSave").onclick = () => {
+  const nom = $("cName").value.trim();
+  if (!nom) { $("cHint").textContent = "Donne un titre à la catégorie."; return; }
+  if (S.categories.some(c => norm(c.nom) === norm(nom) && (!catEdit || c.id !== catEdit.id))) { $("cHint").textContent = "Cette catégorie existe déjà."; return; }
+  const c = { id: catEdit ? catEdit.id : "k" + rid(), nom, couleur: catColor, ordre: catEdit ? (catEdit.ordre || Date.now()) : Date.now() };
+  store.setCategory(c);
+  logEvent(catEdit ? "categorie_modifiee" : "categorie_ajoutee", { d: nom + " · " + (PALETTE.find(p => p[1] === catColor) || ["?"])[0] });
+  resetCatForm();
+};
+$("cClose").onclick = () => { $("catSheet").hidden = true; if (catBackToProduct) { $("prodSheet").hidden = false; renderProdChoices(); } };
+
+/* ================= Comptes (admin) ================= */
+let newRole = "caisse";
+document.querySelectorAll("#aRoles .chip").forEach(b => b.onclick = () => { newRole = b.dataset.r; document.querySelectorAll("#aRoles .chip").forEach(x => x.setAttribute("aria-pressed", String(x === b))); });
+let members = [];
+async function openAccounts() {
+  $("aHint").textContent = ""; $("aPwHint").textContent = "";
+  $("accSheet").hidden = false;
+  if (store.kind !== "cloud") { members = []; $("memList").textContent = ""; $("memList").append(el("p", "small", "La gestion des comptes fonctionne avec le compte en ligne, pas en mode démo.")); $("aCreate").disabled = true; return; }
+  $("aCreate").disabled = false;
+  await loadMembers();
+}
+async function loadMembers() {
+  try { members = await store.listMembers(); } catch (e) { members = []; $("aHint").textContent = "Impossible de lire les comptes : " + (e.code || e.message); }
+  renderMembers();
+}
+function renderMembers() {
+  const box = $("memList"); box.textContent = "";
+  if (store.kind !== "cloud") return;
+  members.sort((a, b) => (a.role === "admin" ? -1 : 0) - (b.role === "admin" ? -1 : 0) || (a.identifiant || "").localeCompare(b.identifiant || ""));
+  members.forEach(m => {
+    const r = el("div", "memrow");
+    r.append(el("span", null, (m.identifiant || "?") + " — " + (ROLES[m.role] || m.role)));
+    if (m.role !== "admin") {
+      const k = "mdel:" + m.uid, x = el("button", armed === k ? "armed" : null, armed === k ? "Confirmer" : "Retirer l'accès"); x.type = "button";
+      x.onclick = () => twoTap(k, async () => {
+        try { await store.deleteMember(m.uid); logEvent("compte_retire", { d: m.identifiant + " (" + ROLES[m.role] + ")" }); await loadMembers(); }
+        catch (e) { $("aHint").textContent = "Échec : " + (e.code || e.message); }
+      });
+      r.append(x);
+    }
+    box.append(r);
+  });
+}
+function secondaryAuth() {
+  if (!FB.secApp) {
+    FB.secApp = FB.A.initializeApp(cfg, "comptes");
+    FB.secAuth = FB.Au.initializeAuth(FB.secApp, { persistence: FB.Au.inMemoryPersistence });
+    if (window.EMMAHDF_EMULATEUR) FB.Au.connectAuthEmulator(FB.secAuth, "http://127.0.0.1:9099", { disableWarnings: true });
+  }
+  return FB.secAuth;
+}
+$("aCreate").onclick = async () => {
+  const id = $("aId").value.trim().toLowerCase(), pw = $("aPw").value, h = $("aHint");
+  h.classList.remove("okmsg");
+  if (!validId(id)) { h.textContent = "L'identifiant fait 3 à 30 caractères : lettres sans accent, chiffres, - ou _."; return; }
+  if (pw.length < 6) { h.textContent = "Le mot de passe doit faire au moins 6 caractères."; return; }
+  if (id === me.identifiant) { h.textContent = "C'est ton identifiant administrateur."; return; }
+  $("aCreate").disabled = true; h.textContent = "Création en cours…";
+  const Au = FB.Au, sa = secondaryAuth(), email = id + "@" + ID_DOMAIN;
+  try {
+    let cred;
+    try { cred = await Au.createUserWithEmailAndPassword(sa, email, pw); }
+    catch (e) {
+      if (e.code !== "auth/email-already-in-use") throw e;
+      try { cred = await Au.signInWithEmailAndPassword(sa, email, pw); }
+      catch (e2) { throw { code: "exists" }; }
+    }
+    const uid = cred.user.uid;
+    await Au.signOut(sa);
+    await store.setMember(uid, { identifiant: id, role: newRole, cree: Date.now() });
+    logEvent("compte_cree", { d: id + " (" + ROLES[newRole] + ")" });
+    h.classList.add("okmsg");
+    h.textContent = "Compte « " + id + " » créé (" + ROLES[newRole] + "). Transmets l'identifiant et le mot de passe.";
+    $("aId").value = ""; $("aPw").value = "";
+    await loadMembers();
+  } catch (e) {
+    h.textContent = e.code === "exists" ? "Cet identifiant existe déjà avec un autre mot de passe. Choisis un autre identifiant." : (AUTH_ERR[e.code] || "Échec : " + (e.code || e.message));
+  }
+  $("aCreate").disabled = false;
+};
+$("aPwSave").onclick = async () => {
+  const id = $("aPwId").value.trim().toLowerCase(), oldPw = $("aPwOld").value, newPw = $("aPwNew").value, h = $("aPwHint");
+  h.classList.remove("okmsg");
+  if (!validId(id)) { h.textContent = "Identifiant invalide."; return; }
+  if (newPw.length < 6) { h.textContent = "Le nouveau mot de passe doit faire au moins 6 caractères."; return; }
+  const Au = FB.Au, sa = secondaryAuth();
+  try {
+    const cred = await Au.signInWithEmailAndPassword(sa, id + "@" + ID_DOMAIN, oldPw);
+    await Au.updatePassword(cred.user, newPw); await Au.signOut(sa);
+    h.classList.add("okmsg"); h.textContent = "Mot de passe de « " + id + " » modifié. Les appareils déjà connectés restent connectés.";
+    logEvent("mdp_compte", { d: id }); $("aPwOld").value = ""; $("aPwNew").value = "";
+  } catch (e) { h.textContent = AUTH_ERR[e.code] || "Échec : " + (e.code || e.message); }
+};
+$("aClose").onclick = () => { $("accSheet").hidden = true; };
+
+/* ================= Menu ================= */
+$("menuBtn").onclick = () => {
+  $("mBilan").hidden = !canCaisse();
+  $("mFond").hidden = !isAdmin();
+  $("fDebut").value = S.config.fondDebut != null ? String(S.config.fondDebut).replace(".", ",") : "";
+  $("fFin").value = S.config.fondCompte != null ? String(S.config.fondCompte).replace(".", ",") : "";
+  renderFond(); renderMenuLinks();
+  $("mAcct").textContent = store.kind === "cloud" ? "Connecté : " + me.identifiant + " (" + ROLES[me.role] + ")." : "Mode démo : les données restent sur cet appareil.";
+  $("mVendeur").value = vendeur;
+  $("mPwBox").hidden = !(store.kind === "cloud" && isAdmin()); $("mPwBox").open = false;
+  $("pwOld").value = ""; $("pwNew").value = ""; $("pwHint").textContent = "";
+  $("mInstall").textContent = installHelp();
+  $("logoutBtn").textContent = store.kind === "cloud" ? "Se déconnecter" : "Quitter le mode démo";
+  $("menuSheet").hidden = false;
+};
+function renderMenuLinks() {
+  const box = $("mLinks"); box.textContent = "";
+  const add = (label, fn, cls) => { const b = el("button", cls || null, label); b.type = "button"; b.onclick = fn; box.append(b); return b; };
+  if (canCaisse()) add("Exporter les ventes (Excel)", () => { $("menuSheet").hidden = true; $("eHint").textContent = ""; $("expSheet").hidden = false; });
+  if (isAdmin()) {
+    add("Catégories et couleurs", () => { $("menuSheet").hidden = true; openCats(false); });
+    add("Comptes caisse / service", () => { $("menuSheet").hidden = true; openAccounts(); });
+    add("Journal des actions", () => { $("menuSheet").hidden = true; S.journalOpen = true; S.jShown = 300; renderJournal(); $("journalSheet").hidden = false; });
+    add("Exporter le journal (Excel)", exportJournal);
+    if (store.kind === "cloud" && !S.config.importe) add("Importer l'historique de l'ancienne version", importLegacy);
+    const k = "reset", b = add(armed === k ? "Appuie encore pour confirmer" : "Nouvelle session (remise à zéro)", () => twoTap(k, newSession), "danger" + (armed === k ? " armed" : ""));
+    b.id = "resetBtn";
+  }
+}
+function renderFond() {
+  const d = S.config.fondDebut, f = S.config.fondCompte, esp = (S.byM && S.byM.especes) || 0;
+  if (d == null) { $("fResume").textContent = "Saisis le fond de caisse au début de la session pour calculer l'écart en fin de journée."; return; }
+  const att = round2(d + esp);
+  let t = "Attendu en caisse : " + fmt(d) + " de fond + " + fmt(esp) + " d'espèces = " + fmt(att) + ".";
+  if (f != null) { const e = round2(f - att); t += " Compté : " + fmt(f) + ". Écart : " + (e > 0 ? "+" : "") + fmt(e) + (e === 0 ? " ✓" : ""); }
+  $("fResume").textContent = t;
+}
+$("fDebutSave").onclick = () => { const v = parseMoney($("fDebut").value); if (isNaN(v) || !$("fDebut").value.trim()) return; store.setConfig({ fondDebut: v }); S.config.fondDebut = v; logEvent("fond_debut", { tot: v }); renderFond(); };
+$("fFinSave").onclick = () => {
+  const v = parseMoney($("fFin").value); if (isNaN(v) || !$("fFin").value.trim()) return;
+  store.setConfig({ fondCompte: v }); S.config.fondCompte = v;
+  const att = round2((S.config.fondDebut || 0) + ((S.byM && S.byM.especes) || 0));
+  logEvent("fond_fin", { tot: v, d: "Attendu " + fmt(att) + " · écart " + fmt(round2(v - att)) }); renderFond();
+};
+function newSession() {
+  const sess = sessionOrders();
+  S.cart = {};
+  store.setConfig({ resetAt: Date.now(), fondDebut: null, fondCompte: null });
+  logEvent("reset", { d: "Session précédente : " + plural(sess.length, "commande", "commandes"), tot: round2(sess.reduce((s, o) => s + (o.total || 0), 0)) });
+  $("menuSheet").hidden = true;
+}
+async function importLegacy(ev) {
+  const b = ev.currentTarget; b.disabled = true; b.textContent = "Import en cours…";
+  try {
+    const r = await store.importLegacy(me.identifiant, (i, n) => { b.textContent = "Import en cours… " + i + "/" + n; });
+    b.textContent = "Importé : " + plural(r.produits, "produit", "produits") + ", " + plural(r.commandes, "commande", "commandes") + ", " + plural(r.journal, "bloc", "blocs") + " de journal ✓";
+    logEvent("import", { d: b.textContent });
+  } catch (e) { b.disabled = false; b.textContent = "Échec de l'import (" + (e.code || e.message) + "). Réessayer"; }
+}
+$("mVendeur").addEventListener("change", () => { vendeur = $("mVendeur").value.trim(); LS.set("emmahdf-vendeur", vendeur); });
+$("pwSave").onclick = async () => {
+  const h = $("pwHint"), oldPw = $("pwOld").value, newPw = $("pwNew").value;
+  if (newPw.length < 6) { h.textContent = "Le nouveau mot de passe doit faire au moins 6 caractères."; return; }
+  try {
+    const { Au, auth } = FB, u = auth.currentUser;
+    await Au.reauthenticateWithCredential(u, Au.EmailAuthProvider.credential(u.email, oldPw));
+    await Au.updatePassword(u, newPw);
+    h.textContent = "Mot de passe modifié."; logEvent("mdp"); $("pwOld").value = ""; $("pwNew").value = "";
+  } catch (e) { h.textContent = AUTH_ERR[e && e.code] || "Modification impossible : " + ((e && e.code) || "erreur"); }
+};
+$("mClose").onclick = () => { $("menuSheet").hidden = true; };
+$("logoutBtn").onclick = async () => {
+  const wasCloud = store && store.kind === "cloud";
+  $("menuSheet").hidden = true;
+  if (wasCloud && FB) await FB.Au.signOut(FB.auth);
+  else { LS.del("emmahdf-mode"); stopApp(); showLogin(); if (cfgValid) loadFirebase().catch(() => {}); }
+};
+
+/* ================= Journal (admin) ================= */
 const LABELS = {
   connexion: "Ouverture de l'appli", commande: "Commande validée", paiement: "Paiement reçu", impaye: "Paiement annulé",
-  commande_supprimee: "Commande supprimée", panier_vide: "Commande abandonnée", ajout: "Produit ajouté",
-  suppression: "Produit supprimé", reset: "Nouvelle session", export: "Commandes exportées", export_journal: "Journal exporté",
-  mdp: "Mot de passe modifié", statut: "Statut modifié"
+  commande_supprimee: "Commande supprimée", panier_vide: "Commande abandonnée", ajout: "Produit ajouté", produit_modifie: "Produit modifié",
+  suppression: "Produit supprimé", categorie_ajoutee: "Catégorie ajoutée", categorie_modifiee: "Catégorie modifiée", categorie_supprimee: "Catégorie supprimée",
+  reset: "Nouvelle session", export: "Ventes exportées", export_journal: "Journal exporté", mdp: "Mot de passe modifié",
+  compte_cree: "Compte créé", compte_retire: "Accès retiré", mdp_compte: "Mot de passe d'un compte modifié",
+  servi: "Plat servi", servi_annule: "Plat remis à servir", indispo: "Plat indisponible", indispo_annule: "Plat de nouveau disponible",
+  commande_servie: "Commande servie", remis_a_faire: "Commande remise à faire", alerte_vue: "Alerte vue par la caisse",
+  fond_debut: "Fond de caisse (début)", fond_fin: "Espèces comptées (fin)", import: "Import de l'ancien historique", statut: "Statut modifié"
 };
 function eventDetail(e) {
   const parts = [];
+  if (e.n) parts.push("#" + e.n);
   if (e.c) parts.push(e.c);
-  if (e.p) parts.push((e.q ? (e.q > 0 ? "+" : "") + e.q + " " : "") + e.p + (e.prix ? " (" + fmt(e.prix) + ")" : ""));
+  if (e.p) parts.push((e.q ? e.q + "× " : "") + e.p + (e.prix ? " (" + fmt(e.prix) + ")" : ""));
   if (e.d) parts.push(e.d);
   if (e.v) parts.push("par " + e.v);
   return parts.join(" · ");
@@ -794,294 +1510,134 @@ function renderJournal() {
   const evs = S.journal.slice().sort((a, b) => b.t - a.t);
   const ul = $("jList"); ul.textContent = "";
   evs.slice(0, S.jShown).forEach(e => {
-    const li = document.createElement("li");
-    const t = document.createElement("span"); t.className = "jt"; t.textContent = hm(e.t);
-    const m = document.createElement("span"); m.textContent = LABELS[e.a] || e.a;
-    const det = eventDetail(e);
-    if (det) { const d = document.createElement("span"); d.className = "jd"; d.textContent = det; m.appendChild(d); }
-    const r = document.createElement("span"); r.className = "jr";
-    if (e.tot != null) r.append(fmt(e.tot));
-    if (e.st) { const s = document.createElement("span"); s.className = e.st === "paye" ? "pos" : "neg"; s.textContent = e.st === "paye" ? (MOYENS[e.m] || "Payé") : "Non payé"; r.appendChild(s); }
-    li.append(t, m, r); ul.appendChild(li);
+    const li = el("li"), m = el("span", null, LABELS[e.a] || e.a);
+    const det = eventDetail(e); if (det) m.append(el("span", "jd", det));
+    const r = el("span", "jr"); if (e.tot != null) r.append(fmt(e.tot));
+    if (e.st) r.append(el("span", e.st === "paye" ? "pos" : "neg", e.st === "paye" ? (MOYENS[e.m] || "Payé") : "Non payé"));
+    li.append(el("span", "jt", hm(e.t)), m, r); ul.append(li);
   });
   const n = evs.length;
-  $("jInfo").textContent = n ? (n > S.jShown ? S.jShown + " sur " + n + " actions récentes" : plural(n, "action récente", "actions récentes")) : "Aucune action pour l'instant";
+  $("jInfo").textContent = n ? (n > S.jShown ? S.jShown + " sur " + n + " actions récentes" : plural(n, "action récente", "actions récentes")) : "Aucune action";
   $("jMore").hidden = n <= S.jShown;
 }
 $("jMore").onclick = () => { S.jShown += 300; renderJournal(); };
-$("journalBtn").onclick = () => {
-  S.journalOpen = !S.journalOpen;
-  $("journalBox").hidden = !S.journalOpen;
-  $("journalBtn").textContent = S.journalOpen ? "Masquer le journal" : "Voir le journal";
-  if (S.journalOpen) { renderJournal(); $("journalBox").scrollIntoView({ behavior: "smooth", block: "start" }); }
-};
+$("jClose").onclick = () => { S.journalOpen = false; $("journalSheet").hidden = true; };
 
-/* ================= Commande en cours ================= */
-function change(pid, delta) {
-  const q = (S.cart[pid] || 0) + delta;
-  if (q < 0) return;
-  if (q === 0) delete S.cart[pid]; else S.cart[pid] = q;
-  try { if (navigator.vibrate) navigator.vibrate(delta > 0 ? 12 : 6); } catch (e) {}
-  render();
-  const c = document.querySelector('[data-id="' + pid + '"] .count');
-  if (c) { c.classList.remove("bump"); void c.offsetWidth; c.classList.add("bump"); }
-}
-$("cartClear").onclick = () => {
-  const items = cartItems();
-  if (items.length) logEvent("panier_vide", { d: summary(items), tot: round2(items.reduce((s, i) => s + i.q * i.prix, 0)) });
-  S.cart = {}; render();
-};
-
-/* Fenêtre de confirmation / d'encaissement */
-let sheet = { mode: null, order: null, moyen: "especes", total: 0 };
-function setMoyen(v) {
-  sheet.moyen = v;
-  document.querySelectorAll(".pay button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === v)));
-  $("cashBox").hidden = v !== "especes";
-  $("sConfirm").textContent = sheet.mode === "pay" ? "Marquer comme payé" : (v === "non_paye" ? "Enregistrer (non payé)" : "Confirmer la vente");
-  updateRendu();
-}
-document.querySelectorAll(".pay button").forEach(b => b.onclick = () => setMoyen(b.dataset.v));
-function parseMoney(s) {
-  s = (s || "").replace(/\s|€/g, "").replace(",", ".");
-  if (s === "") return 0;
-  const n = Number(s);
-  return isFinite(n) && n >= 0 ? round2(n) : NaN;
-}
-function updateRendu() {
-  const el = $("rendu"), recu = parseMoney($("sRecu").value);
-  el.classList.remove("neg");
-  if (!$("sRecu").value.trim() || isNaN(recu)) { el.textContent = ""; return; }
-  const diff = round2(recu - sheet.total);
-  if (diff >= 0) el.textContent = "À rendre : " + fmt(diff);
-  else { el.textContent = "Il manque " + fmt(-diff); el.classList.add("neg"); }
-}
-$("sRecu").addEventListener("input", updateRendu);
-
-function fillItems(items) {
-  const ul = $("sItems"); ul.textContent = "";
-  items.forEach(i => {
-    const li = document.createElement("li");
-    const a = document.createElement("span"); a.textContent = i.q + " × " + i.nom;
-    const b = document.createElement("span"); b.textContent = fmt(i.q * i.prix);
-    li.append(a, b); ul.appendChild(li);
+/* ================= Exports Excel ================= */
+let xlsxLoading = null;
+function loadXLSX() {
+  if (window.XLSX) return Promise.resolve(window.XLSX);
+  if (xlsxLoading) return xlsxLoading;
+  xlsxLoading = new Promise((res, rej) => {
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+    s.onload = () => res(window.XLSX); s.onerror = () => { xlsxLoading = null; rej(new Error("Bibliothèque Excel indisponible (connexion ?)")); };
+    document.head.append(s);
   });
+  return xlsxLoading;
 }
-function openConfirm() {
-  const items = cartItems(); if (!items.length) return;
-  sheet = { mode: "new", order: null, moyen: "especes", total: round2(items.reduce((s, i) => s + i.q * i.prix, 0)) };
-  $("sTitle").textContent = "Confirmer la commande";
-  fillItems(items); $("sTotal").textContent = fmt(sheet.total);
-  $("clientBox").hidden = false; $("optNonPaye").hidden = false;
-  $("sClient").value = ""; $("sRecu").value = ""; $("sHint").textContent = "";
-  setMoyen("especes");
-  $("overlay").hidden = false;
-  setTimeout(() => $("sClient").focus(), 60);
-}
-function openPay(o) {
-  sheet = { mode: "pay", order: o, moyen: "especes", total: o.total || 0 };
-  $("sTitle").textContent = "Encaisser : " + (o.client || "client");
-  fillItems(o.items || []); $("sTotal").textContent = fmt(sheet.total);
-  $("clientBox").hidden = true; $("optNonPaye").hidden = true;
-  $("sRecu").value = ""; $("sHint").textContent = "";
-  setMoyen("especes");
-  $("overlay").hidden = false;
-}
-function closeSheet() { $("overlay").hidden = true; }
-$("cartNext").onclick = openConfirm;
-$("sBack").onclick = closeSheet;
-$("overlay").addEventListener("click", e => { if (e.target === $("overlay")) closeSheet(); });
-$("settings").addEventListener("click", e => { if (e.target === $("settings")) $("settings").hidden = true; });
-document.addEventListener("keydown", e => { if (e.key === "Escape") { closeSheet(); $("settings").hidden = true; } });
-$("sClient").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); confirmSheet(); } });
-$("sConfirm").onclick = confirmSheet;
-
-function confirmSheet() {
-  const m = sheet.moyen;
-  const recu = m === "especes" && $("sRecu").value.trim() ? parseMoney($("sRecu").value) : null;
-  if (recu !== null && isNaN(recu)) { $("sHint").textContent = "Le montant reçu doit être un nombre, par exemple 10 ou 12,50."; return; }
-  if (sheet.mode === "pay") {
-    const o = sheet.order;
-    const f = { statut: "paye", moyen: m, payeLe: Date.now() };
-    if (recu !== null) f.recu = recu;
-    store.updateOrder(o.id, f);
-    logEvent("paiement", { c: o.client, d: summary(o.items), tot: o.total, st: "paye", m });
-    closeSheet(); return;
-  }
-  const client = $("sClient").value.trim();
-  if (!client) { $("sHint").textContent = "Indique le nom du client."; $("sClient").focus(); return; }
-  const items = cartItems(); if (!items.length) { closeSheet(); return; }
-  const o = {
-    id: "c" + rid(), client, items, total: sheet.total,
-    statut: m === "non_paye" ? "non_paye" : "paye", moyen: m === "non_paye" ? null : m,
-    t: Date.now(), dev: deviceId
-  };
-  if (recu !== null) o.recu = recu;
-  if (vendeur) o.v = vendeur;
-  store.saveOrder(o);
-  logEvent("commande", { c: client, d: summary(items), tot: o.total, st: o.statut, m: o.moyen });
-  S.cart = {};
-  closeSheet();
-  if (S.query) { S.query = ""; $("search").value = ""; }
-  render();
-}
-
-function markUnpaid(o) {
-  store.updateOrder(o.id, { statut: "non_paye", moyen: null });
-  logEvent("impaye", { c: o.client, d: summary(o.items), tot: o.total, st: "non_paye" });
-}
-function deleteOrder(o) {
-  store.deleteOrder(o.id);
-  logEvent("commande_supprimee", { c: o.client, d: summary(o.items), tot: o.total, st: o.statut, m: o.moyen });
-}
-
-/* ================= Produits ================= */
-$("addForm").addEventListener("submit", ev => {
-  ev.preventDefault();
-  const nom = $("pName").value.trim(), prix = parseMoney($("pPrice").value);
-  if (!nom) { $("hint").textContent = "Donne un nom au produit."; return; }
-  if (isNaN(prix)) { $("hint").textContent = "Le prix doit être un nombre, par exemple 1,50."; return; }
-  if (S.products.some(p => norm(p.nom) === norm(nom))) { $("hint").textContent = "Ce produit est déjà dans la liste."; return; }
-  $("hint").textContent = "";
-  const p = { id: "p" + rid(), nom, prix, ordre: Date.now() };
-  store.addProduct(p);
-  logEvent("ajout", { p: nom, prix });
-  $("pName").value = ""; $("pPrice").value = ""; $("pName").dataset.fromSearch = "0";
-  if (S.query) { S.query = ""; $("search").value = ""; }
-  render();
-});
-function removeProduct(pid) {
-  const p = findProduct(pid);
-  delete S.cart[pid];
-  store.deleteProduct(pid);
-  if (p) logEvent("suppression", { p: p.nom, prix: p.prix });
-}
-$("editBtn").onclick = () => { S.editing = !S.editing; render(); };
-
-/* Nouvelle session : les totaux repartent de zéro, commandes et journal restent enregistrés */
-let resetArmTimer = null;
-$("resetBtn").onclick = () => {
-  const b = $("resetBtn"), label = "Nouvelle session (remise à zéro)";
-  if (!b.classList.contains("armed")) {
-    b.classList.add("armed"); b.textContent = "Appuie encore pour confirmer";
-    clearTimeout(resetArmTimer);
-    resetArmTimer = setTimeout(() => { b.classList.remove("armed"); b.textContent = label; }, 4000);
-    return;
-  }
-  clearTimeout(resetArmTimer); b.classList.remove("armed"); b.textContent = label;
-  const sess = sessionOrders();
-  S.cart = {};
-  store.setConfig({ resetAt: Date.now() });
-  logEvent("reset", { d: "Session précédente : " + plural(sess.length, "commande", "commandes"), tot: round2(sess.reduce((s, o) => s + (o.total || 0), 0)) });
-};
-
-/* ================= Exports CSV ================= */
-const csvCell = s => '"' + String(s == null ? "" : s).replace(/"/g, '""') + '"';
-const money = n => (n || 0).toFixed(2).replace(".", ",");
-const dt = t => { const d = new Date(t); return pad(d.getDate()) + "/" + pad(d.getMonth() + 1) + "/" + d.getFullYear() + ";" + pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds()); };
+const dstr = t => { const d = new Date(t); return pad(d.getDate()) + "/" + pad(d.getMonth() + 1) + "/" + d.getFullYear(); };
+const tstr = t => { const d = new Date(t); return pad(d.getHours()) + ":" + pad(d.getMinutes()); };
 const fileDate = () => { const d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); };
-async function download(name, lines) {
-  const blob = new Blob(["\ufeff" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
-  const file = new File([blob], name, { type: "text/csv" });
+function sheetFrom(X, rows, widths, moneyCols) {
+  const ws = X.utils.aoa_to_sheet(rows);
+  ws["!cols"] = widths.map(w => ({ wch: w }));
+  if (moneyCols) for (let r = 1; r < rows.length; r++) moneyCols.forEach(c => { const a = X.utils.encode_cell({ r, c }); if (ws[a] && ws[a].t === "n") ws[a].z = '#,##0.00 "€"'; });
+  ws["!autofilter"] = { ref: X.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: 0, c: rows[0].length - 1 } }) };
+  return ws;
+}
+async function download(name, blob) {
+  const file = new File([blob], name, { type: blob.type });
   if (navigator.canShare && /Android|iPhone|iPad/i.test(navigator.userAgent) && navigator.canShare({ files: [file] })) {
     try { await navigator.share({ files: [file], title: name }); return; } catch (e) { if (e && e.name === "AbortError") return; }
   }
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob); a.download = name;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
-
-$("exportBtn").onclick = async () => {
-  const b = $("exportBtn"); b.disabled = true;
+function svcLabel(o, it) { if (o.importe) return ""; if (it) return it.indispo ? "Indisponible" : it.servi ? "Servi" : "À faire"; return o.service === "servie" ? "Servie" : "À faire"; }
+async function exportSales(scope) {
+  const h = $("eHint"); h.classList.remove("okmsg"); h.textContent = "Préparation du fichier…";
   try {
-    const all = (await store.allOrders()).sort((a, b) => a.t - b.t);
-    const lines = ["Date;Heure;Client;Produits;Total (€);Statut;Moyen de paiement;Montant reçu (€);Vendeur;Session en cours"];
-    all.forEach(o => lines.push(dt(o.t) + ";" + csvCell(o.client) + ";" + csvCell(summary(o.items)) + ";" + money(o.total) + ";" +
-      (o.statut === "paye" ? "Payé" : "Non payé") + ";" + (MOYENS[o.moyen] || "") + ";" + (o.recu != null ? money(o.recu) : "") + ";" +
-      csvCell(o.v || "") + ";" + ((o.t || 0) > (S.resetAt || 0) ? "Oui" : "Non")));
-    const sold = {}, byM = { especes: 0, carte: 0, autre: 0 }; let unpaid = 0;
-    all.filter(o => (o.t || 0) > (S.resetAt || 0)).forEach(o => {
-      (o.items || []).forEach(i => { const s = sold[i.nom] || (sold[i.nom] = { prix: i.prix, q: 0 }); s.q += i.q; });
-      if (o.statut === "paye") byM[o.moyen || "autre"] += o.total || 0; else unpaid += o.total || 0;
+    const X = await loadXLSX();
+    let all = (await store.allOrders()).sort((a, b) => a.t - b.t);
+    if (scope === "session") all = all.filter(o => (o.t || 0) > (S.resetAt || 0));
+    const catName = it => it.catNom || (catById(it.cat) || {}).nom || "";
+    const lignes = [["Date", "Heure", "N° commande", "Client", "Table", "Produit", "Catégorie", "Type", "Quantité", "Prix unitaire", "Total ligne", "Paiement", "Moyen", "Vendeur", "Service", "Note"]];
+    const cmds = [["Date", "Heure", "N° commande", "Client", "Table", "Produits", "Articles", "Total", "Paiement", "Moyen", "Montant reçu", "Vendeur", "Service", "Note"]];
+    const byP = {}, byC = {}, byMo = { "Espèces": [0, 0], "Carte": [0, 0], "Autre": [0, 0], "Non payé": [0, 0] }, byD = {};
+    all.forEach(o => {
+      const table = o.emporter ? "À emporter" : (o.table || "");
+      const pay = o.statut === "paye" ? "Payé" : "Non payé", mo = o.statut === "paye" ? (MOYENS[o.moyen] || "Autre") : "";
+      let nArt = 0;
+      (o.items || []).forEach(it => {
+        const tl = round2(it.q * (it.prix || 0)); nArt += it.q;
+        lignes.push([dstr(o.t), tstr(o.t), o.num || "", o.client || "", table, it.nom, catName(it), TYPES[it.type] || "", it.q, it.prix || 0, tl, pay, mo, o.v || "", svcLabel(o, it), o.note || ""]);
+        const kp = it.nom, p = byP[kp] || (byP[kp] = [it.nom, catName(it), TYPES[it.type] || "", 0, 0]); p[3] += it.q; p[4] = round2(p[4] + tl);
+        const kc = catName(it) || "Sans catégorie", c = byC[kc] || (byC[kc] = [kc, 0, 0]); c[1] += it.q; c[2] = round2(c[2] + tl);
+      });
+      cmds.push([dstr(o.t), tstr(o.t), o.num || "", o.client || "", table, summary(o.items), nArt, o.total || 0, pay, mo, o.recu != null ? o.recu : "", o.v || "", svcLabel(o), o.note || ""]);
+      const km = o.statut === "paye" ? (MOYENS[o.moyen] || "Autre") : "Non payé"; byMo[km][0]++; byMo[km][1] = round2(byMo[km][1] + (o.total || 0));
+      const kd = dstr(o.t), d = byD[kd] || (byD[kd] = [kd, 0, 0, 0, 0]); d[1]++; d[2] += nArt;
+      if (o.statut === "paye") d[3] = round2(d[3] + (o.total || 0)); else d[4] = round2(d[4] + (o.total || 0));
     });
-    lines.push("", "Bilan de la session en cours", "Produit;Prix unitaire (€);Quantité vendue;Total (€)");
-    Object.keys(sold).forEach(n => lines.push(csvCell(n) + ";" + money(sold[n].prix) + ";" + sold[n].q + ";" + money(sold[n].q * sold[n].prix)));
-    lines.push("", ";;Espèces;" + money(byM.especes), ";;Carte;" + money(byM.carte), ";;Autre;" + money(byM.autre), ";;Non payé;" + money(unpaid));
-    await download("EmmaHdfVente-commandes-" + fileDate() + ".csv", lines);
-    logEvent("export", { d: plural(all.length, "commande", "commandes") });
-  } catch (e) { showErr("Export impossible : " + ((e && e.message) || "vérifie la connexion")); }
-  b.disabled = false;
-};
-
-$("exportJBtn").onclick = async () => {
-  const b = $("exportJBtn"); b.disabled = true;
+    const wb = X.utils.book_new();
+    X.utils.book_append_sheet(wb, sheetFrom(X, lignes, [11, 7, 8, 18, 11, 24, 14, 10, 9, 11, 11, 10, 10, 12, 12, 24], [9, 10]), "Ventes");
+    X.utils.book_append_sheet(wb, sheetFrom(X, cmds, [11, 7, 8, 18, 11, 40, 8, 10, 10, 10, 12, 12, 10, 24], [7, 10]), "Commandes");
+    X.utils.book_append_sheet(wb, sheetFrom(X, [["Produit", "Catégorie", "Type", "Quantité", "Chiffre d'affaires"]].concat(Object.values(byP).sort((a, b) => b[4] - a[4])), [26, 16, 10, 10, 16], [4]), "Par produit");
+    X.utils.book_append_sheet(wb, sheetFrom(X, [["Catégorie", "Quantité", "Chiffre d'affaires"]].concat(Object.values(byC).sort((a, b) => b[2] - a[2])), [20, 10, 16], [2]), "Par catégorie");
+    X.utils.book_append_sheet(wb, sheetFrom(X, [["Moyen de paiement", "Commandes", "Montant"]].concat(Object.entries(byMo).map(([k, v]) => [k, v[0], v[1]])), [20, 12, 14], [2]), "Par paiement");
+    X.utils.book_append_sheet(wb, sheetFrom(X, [["Date", "Commandes", "Articles", "Encaissé", "Non payé"]].concat(Object.values(byD)), [12, 12, 10, 12, 12], [3, 4]), "Par jour");
+    const out = X.write(wb, { bookType: "xlsx", type: "array" });
+    await download("EmmaHdfVente-ventes-" + (scope === "session" ? "session-" : "historique-") + fileDate() + ".xlsx",
+      new Blob([out], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
+    logEvent("export", { d: (scope === "session" ? "Session" : "Historique") + " · " + plural(all.length, "commande", "commandes") });
+    h.classList.add("okmsg"); h.textContent = "Fichier prêt (" + plural(all.length, "commande", "commandes") + ").";
+  } catch (e) { h.textContent = "Export impossible : " + ((e && e.message) || "vérifie la connexion"); }
+}
+$("eSession").onclick = () => exportSales("session");
+$("eAll").onclick = () => exportSales("all");
+$("eClose").onclick = () => { $("expSheet").hidden = true; };
+async function exportJournal(ev) {
+  const b = ev && ev.currentTarget; if (b) { b.disabled = true; b.textContent = "Préparation…"; }
   try {
+    const X = await loadXLSX();
     const evs = (await store.allJournal()).sort((a, b) => a.t - b.t);
     const devs = {}; let nDev = 0;
-    const lines = ["Date;Heure;Action;Client;Détail;Montant (€);Statut;Moyen;Vendeur;Téléphone"];
+    const rows = [["Date", "Heure", "Action", "N° commande", "Client", "Détail", "Montant", "Paiement", "Moyen", "Vendeur", "Rôle", "Appareil"]];
     evs.forEach(e => {
       if (!(e.dev in devs)) devs[e.dev] = ++nDev;
-      const det = [e.p ? (e.q ? e.q + " " : "") + e.p : "", e.d || ""].filter(Boolean).join(" · ");
-      lines.push(dt(e.t) + ";" + csvCell(LABELS[e.a] || e.a) + ";" + csvCell(e.c || "") + ";" + csvCell(det) + ";" +
-        (e.tot != null ? money(e.tot) : (e.prix ? money(e.prix) : "")) + ";" + (e.st ? (e.st === "paye" ? "Payé" : "Non payé") : "") + ";" +
-        (MOYENS[e.m] || "") + ";" + csvCell(e.v || "") + ";Téléphone " + devs[e.dev]);
+      const det = [e.p ? (e.q ? e.q + "× " : "") + e.p : "", e.d || ""].filter(Boolean).join(" · ");
+      rows.push([dstr(e.t), tstr(e.t), LABELS[e.a] || e.a, e.n || "", e.c || "", det, e.tot != null ? e.tot : (e.prix || ""), e.st ? (e.st === "paye" ? "Payé" : "Non payé") : "", MOYENS[e.m] || "", e.v || "", ROLES[e.r] || "", "Appareil " + devs[e.dev]]);
     });
-    await download("EmmaHdfVente-journal-" + fileDate() + ".csv", lines);
+    const wb = X.utils.book_new();
+    X.utils.book_append_sheet(wb, sheetFrom(X, rows, [11, 7, 26, 9, 18, 44, 10, 10, 10, 12, 12, 10], [6]), "Journal");
+    const out = X.write(wb, { bookType: "xlsx", type: "array" });
+    await download("EmmaHdfVente-journal-" + fileDate() + ".xlsx", new Blob([out], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
     logEvent("export_journal", { d: plural(evs.length, "action", "actions") });
-  } catch (e) { showErr("Export impossible : " + ((e && e.message) || "vérifie la connexion")); }
-  b.disabled = false;
-};
+    if (b) b.textContent = "Journal exporté ✓";
+  } catch (e) { if (b) b.textContent = "Échec de l'export : " + ((e && e.message) || "connexion ?"); }
+  if (b) b.disabled = false;
+}
 
-/* ================= Compte ================= */
-$("menuBtn").onclick = () => {
-  $("setAcct").textContent = store && store.kind === "cloud"
-    ? "Connecté au compte « " + acctName + " ». Toutes les données sont partagées entre les téléphones connectés à ce compte."
-    : "Mode essai : les données restent sur ce téléphone. Déconnecte-toi puis crée un compte pour les synchroniser.";
-  $("setVendeur").value = vendeur;
-  $("pwBox").hidden = !(store && store.kind === "cloud");
-  $("pwOld").value = ""; $("pwNew").value = ""; $("pwHint").textContent = "";
-  $("setInstall").textContent = installHelp();
-  $("logoutBtn").textContent = store && store.kind === "cloud" ? "Se déconnecter" : "Quitter le mode essai";
-  $("settings").hidden = false;
-};
-$("setClose").onclick = () => { $("settings").hidden = true; };
-$("setVendeur").addEventListener("change", () => { vendeur = $("setVendeur").value.trim(); LS.set("emmahdf-vendeur", vendeur); });
-$("pwSave").onclick = async () => {
-  const h = $("pwHint"), oldPw = $("pwOld").value, newPw = $("pwNew").value;
-  if (newPw.length < 6) { h.textContent = "Le nouveau mot de passe doit faire au moins 6 caractères."; return; }
-  try {
-    const { Au, auth } = FB, u = auth.currentUser;
-    await Au.reauthenticateWithCredential(u, Au.EmailAuthProvider.credential(u.email, oldPw));
-    await Au.updatePassword(u, newPw);
-    h.textContent = "Mot de passe modifié. Pense à prévenir les autres bénévoles.";
-    logEvent("mdp");
-    $("pwOld").value = ""; $("pwNew").value = "";
-  } catch (e) { h.textContent = AUTH_ERR[e && e.code] || "Modification impossible : " + ((e && e.code) || "erreur"); }
-};
-$("logoutBtn").onclick = async () => {
-  const wasCloud = store && store.kind === "cloud";
-  $("settings").hidden = true;
-  if (wasCloud && FB) { await FB.Au.signOut(FB.auth); }
-  else { LS.del("emmahdf-mode"); stopApp(); showLogin(); if (cfgValid) loadFirebase().catch(() => {}); }
-};
+/* ================= Fermeture des fenêtres ================= */
+document.querySelectorAll(".overlay").forEach(o => o.addEventListener("click", e => { if (e.target === o) { o.hidden = true; if (o.id === "journalSheet") S.journalOpen = false; } }));
+document.addEventListener("keydown", e => { if (e.key === "Escape") { document.querySelectorAll(".overlay").forEach(o => { o.hidden = true; }); S.journalOpen = false; } });
 
-/* ================= Installation (Android / iPhone / ordinateur) ================= */
+/* ================= Installation ================= */
 let deferredPrompt = null;
 const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 function installHelp() {
   if (isStandalone()) return "L'application est déjà installée sur cet appareil.";
-  if (isIOS()) return "Sur iPhone : ouvre ce site dans Safari, appuie sur le bouton Partager (carré avec une flèche), puis « Sur l'écran d'accueil ».";
-  if (deferredPrompt) return "Appuie sur « Installer » dans le bandeau en haut de la page.";
-  return "Sur Android : menu ⋮ de Chrome, puis « Installer l'application » ou « Ajouter à l'écran d'accueil ». Sur ordinateur : icône d'installation dans la barre d'adresse de Chrome ou Edge.";
+  if (isIOS()) return "Sur iPhone/iPad : ouvre ce site dans Safari, bouton Partager (carré avec une flèche), puis « Sur l'écran d'accueil ».";
+  if (deferredPrompt) return "Appuie sur « Installer » dans le bandeau de l'écran caisse.";
+  return "Sur Android : menu ⋮ de Chrome, puis « Installer l'application ». Sur ordinateur : icône d'installation dans la barre d'adresse de Chrome ou Edge.";
 }
 function updateInstallCard() {
   const hide = isStandalone() || LS.get("emmahdf-install-dismissed", false) || !(deferredPrompt || isIOS());
-  $("installCard").hidden = hide;
-  if (hide) return;
+  $("installCard").hidden = hide; if (hide) return;
   $("installGo").hidden = !deferredPrompt;
-  $("installText").textContent = deferredPrompt ? "Installe EmmaHdfVente sur ce téléphone pour l'ouvrir comme une vraie application." : installHelp();
+  $("installText").textContent = deferredPrompt ? "Installe EmmaHdfVente sur cet appareil pour l'ouvrir comme une application." : installHelp();
 }
 window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredPrompt = e; updateInstallCard(); });
 window.addEventListener("appinstalled", () => { deferredPrompt = null; updateInstallCard(); });
@@ -1089,20 +1645,14 @@ $("installGo").onclick = async () => { if (!deferredPrompt) return; deferredProm
 $("installClose").onclick = () => { LS.set("emmahdf-install-dismissed", true); updateInstallCard(); };
 
 /* ================= Démarrage ================= */
-if ("serviceWorker" in navigator && location.protocol !== "file:") {
-  navigator.serviceWorker.register("sw.js").catch(() => {});
-}
-if (LS.get("emmahdf-mode", null) === "local") {
-  startApp(makeLocalStore(), "");
-} else if (cfgValid) {
+if ("serviceWorker" in navigator && location.protocol !== "file:" && !window.EMMAHDF_EMULATEUR) navigator.serviceWorker.register("sw.js").catch(() => {});
+if (LS.get("emmahdf-mode", null) === "demo") startApp(makeLocalStore(), { role: "admin", identifiant: "démo" });
+else if (cfgValid) {
   loadFirebase().catch(() => {
-    showLogin();
-    $("fbError").hidden = false;
+    showLogin(); $("fbError").hidden = false;
     $("fbError").textContent = "Impossible de charger le service de comptes. Vérifie la connexion internet puis recharge la page.";
   });
-} else {
-  showLogin();
-}
+} else showLogin();
 </script>
 </body>
 </html>
