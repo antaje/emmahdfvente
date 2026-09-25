@@ -1,0 +1,1108 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EmmaHdfVente</title>
+<meta name="description" content="Caisse de vente de l'association EMMA Hauts-de-France">
+<meta name="theme-color" content="#8E2A1E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="EmmaHdfVente">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="firebase-config.js"></script>
+<style>
+:root{
+  --bg:#FBF3E6; --surface:#FFFFFF; --ink:#3A1A12; --muted:#7A5C50; --line:#EAD9C6;
+  --brick:#8E2A1E; --brick-ink:#FFFFFF; --brick-soft:#F6E1DA; --sand:#CAA28C; --sand-soft:#F3E6D6;
+  --ok:#3F6B3A; --ok-soft:#E4EEDC;
+  --font:"Rubik", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1D1411; --surface:#2A1D18; --ink:#F7EADB; --muted:#C0A393; --line:#43302A;
+    --brick:#D9735F; --brick-ink:#1D1411; --brick-soft:#4A2721; --sand-soft:#3A2A22;
+    --ok:#8FC27F; --ok-soft:#26351F; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1D1411; --surface:#2A1D18; --ink:#F7EADB; --muted:#C0A393; --line:#43302A;
+  --brick:#D9735F; --brick-ink:#1D1411; --brick-soft:#4A2721; --sand-soft:#3A2A22;
+  --ok:#8FC27F; --ok-soft:#26351F; color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+body.hascart{padding-bottom:96px}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+button:disabled{cursor:default;opacity:.5}
+[hidden]{display:none !important}
+:focus-visible{outline:3px solid var(--brick);outline-offset:2px}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px 40px}
+input{width:100%;height:48px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);padding:0 12px}
+input:focus{border-color:var(--brick);outline:none}
+label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 4px}
+.hint{margin:8px 0 0;font-size:.88rem;color:var(--brick);min-height:1.2em}
+.note{margin:24px 4px;color:var(--muted)}
+.primary{height:52px;padding:0 20px;border-radius:12px;border:0;background:var(--brick);color:var(--brick-ink);font-weight:700}
+.ghost{height:52px;padding:0 14px;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--muted)}
+.wide{width:100%}
+
+/* Connexion */
+#login{min-height:100%;display:flex;align-items:center}
+.loginbox{max-width:420px;margin:0 auto;padding:32px 20px;width:100%}
+.brand{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;margin-bottom:22px}
+.brand img{width:132px;height:132px;border-radius:50%;box-shadow:0 0 0 4px var(--surface),0 0 0 5px var(--line)}
+.brand h1{margin:6px 0 0;font-size:1.9rem;letter-spacing:-.01em;color:var(--brick)}
+.brand p{margin:0;color:var(--muted)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:6px}
+.tabs button{border:0;background:transparent;height:46px;color:var(--muted);font-weight:500}
+.tabs button[aria-selected="true"]{background:var(--brick);color:var(--brick-ink)}
+.small{font-size:.85rem;color:var(--muted);margin:6px 0 0}
+.linkbtn{border:0;background:none;color:var(--brick);text-decoration:underline;padding:8px 0;font-size:.95rem}
+.warn{background:var(--brick-soft);border-radius:12px;padding:12px 14px;font-size:.92rem;margin-bottom:12px}
+
+/* En-tête */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:12px 0 12px;border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bar img{width:40px;height:40px;border-radius:50%}
+.bar .appname{font-weight:700;color:var(--brick);font-size:1.1rem;line-height:1.1}
+.bar .acct{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+.menubtn{margin-left:auto;height:40px;padding:0 12px;border-radius:10px;border:1.5px solid var(--line);background:transparent;font-size:.9rem}
+.total{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#totalEur{font-size:clamp(2.1rem,9vw,2.8rem);font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
+#totalSub{color:var(--muted);font-size:.95rem;text-align:right}
+#totalSub b{color:var(--brick);font-weight:500}
+.sync{display:block;margin-top:6px;font-size:.85rem;color:var(--muted)}
+.sync.err{color:var(--brick)}
+.search{margin-top:10px;position:relative}
+.search input{padding-left:40px}
+.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted);pointer-events:none}
+
+/* Installation */
+.install{margin-top:14px;background:var(--sand-soft);border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:center;font-size:.92rem}
+.install p{margin:0;flex:1}
+.install button{border:0;background:transparent;color:var(--muted);font-size:1.2rem;width:36px;height:36px}
+
+/* Produits */
+#list{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+.item{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:10px 10px 10px 16px}
+.item.incart{border-color:var(--brick)}
+.name{font-weight:500;font-size:1.1rem;overflow-wrap:anywhere}
+.meta{display:block;color:var(--muted);font-size:.9rem;font-weight:400;font-variant-numeric:tabular-nums}
+.count{min-width:2.4ch;text-align:center;font-size:1.9rem;font-weight:700;font-variant-numeric:tabular-nums}
+.count.zero{color:var(--line)}
+.count.bump{animation:bump .18s ease-out}
+@keyframes bump{50%{transform:scale(1.25)}}
+.minus{width:48px;height:48px;border-radius:12px;border:1.5px solid var(--line);background:transparent;font-size:1.6rem;line-height:1;color:var(--muted)}
+.plus{width:76px;height:64px;border-radius:14px;border:0;background:var(--brick);color:var(--brick-ink);font-size:2.4rem;font-weight:500;line-height:1}
+.plus:active{transform:scale(.95)}
+.del{height:48px;padding:0 14px;border-radius:12px;border:0;background:var(--brick-soft);color:var(--brick);font-weight:500}
+.editing .plus,.editing .minus,.editing .count{display:none}
+.item .del{display:none}
+.editing .item .del{display:block}
+
+.card{margin-top:22px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h2{margin:0 0 10px;font-size:1.05rem;font-weight:500}
+.row{display:grid;grid-template-columns:1fr 110px;gap:10px}
+.row label{margin-top:0}
+.card input,.sheet input{background:var(--bg)}
+.addBtn{margin-top:12px;width:100%;height:50px;border:0;border-radius:12px;background:var(--brick-soft);color:var(--brick);font-weight:700}
+
+/* Bilan */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{background:var(--bg);border-radius:10px;padding:10px 12px}
+.stat span{display:block;font-size:.85rem;color:var(--muted)}
+.stat strong{font-size:1.2rem;font-variant-numeric:tabular-nums}
+.stat.unpaid strong{color:var(--brick)}
+
+/* Commandes */
+.chead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.chead h2{margin:0}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:8px 12px;font-size:.9rem;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+#orders{list-style:none;margin:0;padding:0}
+.order{padding:12px 0;border-top:1px solid var(--line)}
+.order:first-child{border-top:0}
+.ohead{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.oc{font-weight:500;overflow-wrap:anywhere}
+.ot{color:var(--muted);font-size:.85rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.oitems{color:var(--muted);font-size:.92rem;margin:2px 0 8px}
+.ofoot{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.otot{font-weight:700;font-variant-numeric:tabular-nums;margin-right:auto}
+.badge{height:38px;padding:0 14px;border-radius:19px;border:0;font-weight:500;font-size:.9rem}
+.badge.paye{background:var(--ok-soft);color:var(--ok)}
+.badge.non_paye{background:var(--brick);color:var(--brick-ink)}
+.badge.armed{outline:2px solid var(--brick)}
+.odel{height:38px;padding:0 12px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:var(--muted);font-size:.85rem}
+.odel.armed{background:var(--brick);border-color:var(--brick);color:var(--brick-ink)}
+.more{margin-top:10px;width:100%;height:44px;border-radius:10px;border:1.5px solid var(--line);background:transparent;font-size:.95rem}
+
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.tool{height:44px;padding:0 14px;border-radius:10px;border:1.5px solid var(--line);background:transparent;font-size:.95rem}
+.tool.danger{color:var(--brick)}
+.tool.armed{background:var(--brick);border-color:var(--brick);color:var(--brick-ink)}
+
+#jList{list-style:none;margin:8px 0 0;padding:0;max-height:560px;overflow-y:auto}
+#jList li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:.95rem;align-items:baseline}
+#jList li:first-child{border-top:0}
+.jt{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.85rem;white-space:nowrap}
+.jd{display:block;color:var(--muted);font-size:.85rem}
+.jr{text-align:right;font-variant-numeric:tabular-nums;font-size:.9rem;white-space:nowrap}
+.jr .pos{color:var(--ok);display:block} .jr .neg{color:var(--brick);display:block}
+
+/* Barre de commande */
+.cartbar{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+.cartin{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.cartinfo{margin-right:auto;line-height:1.2}
+.cartinfo strong{display:block;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.cartinfo span{color:var(--muted);font-size:.9rem}
+
+/* Fenêtres */
+.overlay{position:fixed;inset:0;z-index:20;background:rgba(30,12,8,.5);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);width:100%;max-width:560px;max-height:92%;overflow-y:auto;border-radius:18px 18px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px))}
+.sheet h2{margin:0 0 12px;font-size:1.25rem;font-weight:700}
+.sheet h3{margin:20px 0 4px;font-size:1rem;font-weight:500}
+#sItems{list-style:none;margin:0 0 14px;padding:0}
+#sItems li{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
+#sItems li:first-child{border-top:0}
+.stotal{display:flex;justify-content:space-between;font-size:1.3rem;font-weight:700;margin:4px 0 8px;font-variant-numeric:tabular-nums}
+.pay{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.pay button{height:52px;border-radius:12px;border:1.5px solid var(--line);background:transparent;font-weight:500}
+.pay button[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.pay button[data-v="non_paye"][aria-pressed="true"]{background:var(--brick);border-color:var(--brick);color:var(--brick-ink)}
+.cash{margin-top:12px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+.cash label{margin-top:0}
+#rendu{font-weight:700;font-variant-numeric:tabular-nums;padding-bottom:12px;white-space:nowrap}
+#rendu.neg{color:var(--brick)}
+.sactions{display:grid;grid-template-columns:auto 1fr;gap:10px;margin-top:18px}
+
+@media (max-width:380px){
+  .item{grid-template-columns:1fr auto auto;padding-left:12px}
+  .item .name{grid-column:1/-1}
+}
+@media (prefers-reduced-motion:reduce){.count.bump{animation:none}.plus:active{transform:none}}
+</style>
+</head>
+<body>
+
+<!-- ============ ÉCRAN DE CONNEXION ============ -->
+<section id="login" hidden>
+  <div class="loginbox">
+    <div class="brand">
+      <img src="icons/logo.png" alt="Logo EMMA Hauts-de-France">
+      <h1>EmmaHdfVente</h1>
+      <p>La caisse de l'association EMMA Hauts-de-France</p>
+    </div>
+
+    <div class="warn" id="cfgMissing" hidden>La connexion aux comptes n'est pas encore configurée (fichier <b>firebase-config.js</b>). Tu peux déjà essayer l'application en mode essai.</div>
+    <div class="warn" id="fbError" hidden></div>
+
+    <div id="loginArea">
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" id="tabLogin" aria-selected="true">Se connecter</button>
+        <button type="button" role="tab" id="tabCreate" aria-selected="false">Créer un compte</button>
+      </div>
+      <form id="loginForm" autocomplete="on">
+        <label for="lId">Identifiant</label>
+        <input id="lId" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Ex. emmahdf" required>
+        <label for="lPw">Mot de passe</label>
+        <input id="lPw" name="password" type="password" autocomplete="current-password" required>
+        <div id="createFields" hidden>
+          <label for="lPw2">Confirme le mot de passe</label>
+          <input id="lPw2" type="password" autocomplete="new-password">
+          <p class="small">Aucune adresse e-mail n'est demandée. Note bien l'identifiant et le mot de passe : ils servent à se connecter sur tous les téléphones.</p>
+        </div>
+        <label for="lVendeur">Ton prénom (facultatif, pour le journal)</label>
+        <input id="lVendeur" autocomplete="given-name" maxlength="30" placeholder="Ex. Tahiana">
+        <p class="hint" id="lHint"></p>
+        <button class="primary wide" type="submit" id="lSubmit">Se connecter</button>
+      </form>
+    </div>
+    <p style="text-align:center;margin-top:14px"><button class="linkbtn" type="button" id="localBtn">Essayer sans compte (données sur ce téléphone)</button></p>
+  </div>
+</section>
+
+<!-- ============ APPLICATION ============ -->
+<div id="app" hidden>
+<div class="wrap">
+  <header class="top">
+    <div class="bar">
+      <img src="icons/logo.png" alt="">
+      <div class="appname">EmmaHdfVente<span class="acct" id="acctLabel"></span></div>
+      <button class="menubtn" id="menuBtn" type="button">Compte</button>
+    </div>
+    <div class="total">
+      <span id="totalEur">0,00&nbsp;€</span>
+      <span id="totalSub">encaissé</span>
+    </div>
+    <span id="sync" class="sync"></span>
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="Rechercher un produit" aria-label="Rechercher un produit" autocomplete="off">
+    </div>
+  </header>
+
+  <main>
+    <div class="install" id="installCard" hidden>
+      <p id="installText"></p>
+      <button type="button" id="installGo" class="primary" style="height:40px;width:auto;padding:0 14px;color:var(--brick-ink);font-size:.9rem" hidden>Installer</button>
+      <button type="button" id="installClose" aria-label="Masquer">✕</button>
+    </div>
+
+    <p id="loading" class="note">Chargement des produits…</p>
+    <ul id="list" aria-live="polite"></ul>
+    <p id="empty" class="note" hidden>Aucun produit pour l'instant. Ajoute ton premier produit ci-dessous, puis appuie sur + pour le mettre dans la commande. Les produits sont enregistrés dans le compte : pas besoin de les ressaisir sur un autre téléphone.</p>
+    <p id="noMatch" class="note" hidden></p>
+
+    <form class="card" id="addForm" autocomplete="off">
+      <h2>Ajouter un produit</h2>
+      <div class="row">
+        <div><label for="pName">Nom du produit</label><input id="pName" maxlength="60" placeholder="Ex. Samoussa" required></div>
+        <div><label for="pPrice">Prix (€)</label><input id="pPrice" inputmode="decimal" placeholder="1,50"></div>
+      </div>
+      <button class="addBtn" type="submit">Ajouter le produit</button>
+      <p class="hint" id="hint"></p>
+    </form>
+
+    <section class="card">
+      <h2>Bilan de la session</h2>
+      <div class="stats">
+        <div class="stat"><span>Espèces</span><strong id="stEsp">0,00 €</strong></div>
+        <div class="stat"><span>Carte</span><strong id="stCarte">0,00 €</strong></div>
+        <div class="stat"><span>Autre (Lydia, virement…)</span><strong id="stAutre">0,00 €</strong></div>
+        <div class="stat unpaid"><span>Non payé</span><strong id="stNon">0,00 €</strong></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="chead">
+        <h2 id="ordersTitle">Commandes</h2>
+        <div class="seg" role="group" aria-label="Filtrer les commandes">
+          <button type="button" data-f="toutes" aria-pressed="true">Toutes</button>
+          <button type="button" data-f="non_paye" aria-pressed="false">Non payées</button>
+        </div>
+      </div>
+      <ul id="orders"></ul>
+      <p id="noOrders" class="note" style="margin:12px 0 0">Aucune commande pour l'instant.</p>
+      <button class="more" id="ordersMore" type="button" hidden>Afficher plus de commandes</button>
+    </section>
+
+    <div class="tools">
+      <button class="tool" id="journalBtn" type="button">Voir le journal</button>
+      <button class="tool" id="editBtn" type="button">Supprimer des produits</button>
+      <button class="tool" id="exportBtn" type="button">Exporter les commandes (CSV)</button>
+      <button class="tool" id="exportJBtn" type="button">Exporter le journal (CSV)</button>
+      <button class="tool danger" id="resetBtn" type="button">Nouvelle session (remise à zéro)</button>
+    </div>
+
+    <section class="card" id="journalBox" hidden>
+      <div class="chead"><h2>Journal des actions</h2><small id="jInfo" style="color:var(--muted)"></small></div>
+      <ul id="jList"></ul>
+      <button class="more" id="jMore" type="button" hidden>Afficher plus d'actions</button>
+    </section>
+  </main>
+</div>
+
+<div class="cartbar" id="cartBar" hidden>
+  <div class="cartin">
+    <div class="cartinfo"><strong id="cartTotal">0,00 €</strong><span id="cartCount">0 article</span></div>
+    <button class="ghost" id="cartClear" type="button">Vider</button>
+    <button class="primary" id="cartNext" type="button">Valider</button>
+  </div>
+</div>
+</div>
+
+<!-- Confirmation / encaissement -->
+<div class="overlay" id="overlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle">
+    <h2 id="sTitle">Confirmer la commande</h2>
+    <ul id="sItems"></ul>
+    <div class="stotal"><span>Total</span><span id="sTotal">0,00 €</span></div>
+    <div id="clientBox">
+      <label for="sClient">Nom du client</label>
+      <input id="sClient" maxlength="60" placeholder="Ex. Rakoto" list="clientsList" autocomplete="off">
+      <datalist id="clientsList"></datalist>
+    </div>
+    <div class="pay" role="group" aria-label="Paiement">
+      <button type="button" data-v="especes" aria-pressed="true">Espèces</button>
+      <button type="button" data-v="carte" aria-pressed="false">Carte</button>
+      <button type="button" data-v="autre" aria-pressed="false">Autre (Lydia…)</button>
+      <button type="button" data-v="non_paye" aria-pressed="false" id="optNonPaye">Non payé</button>
+    </div>
+    <div class="cash" id="cashBox">
+      <div><label for="sRecu">Montant reçu (facultatif)</label><input id="sRecu" inputmode="decimal" placeholder="Ex. 10"></div>
+      <span id="rendu"></span>
+    </div>
+    <p class="hint" id="sHint"></p>
+    <div class="sactions">
+      <button class="ghost" id="sBack" type="button">Retour</button>
+      <button class="primary" id="sConfirm" type="button">Confirmer la vente</button>
+    </div>
+  </div>
+</div>
+
+<!-- Compte -->
+<div class="overlay" id="settings" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="setTitle">
+    <h2 id="setTitle">Compte</h2>
+    <p id="setAcct" style="margin:0;color:var(--muted)"></p>
+
+    <label for="setVendeur">Ton prénom sur ce téléphone (affiché dans le journal)</label>
+    <input id="setVendeur" maxlength="30" placeholder="Ex. Tahiana">
+
+    <div id="pwBox">
+      <h3>Changer le mot de passe</h3>
+      <label for="pwOld">Mot de passe actuel</label><input id="pwOld" type="password" autocomplete="current-password">
+      <label for="pwNew">Nouveau mot de passe (6 caractères minimum)</label><input id="pwNew" type="password" autocomplete="new-password">
+      <button class="ghost wide" id="pwSave" type="button" style="margin-top:10px">Changer le mot de passe</button>
+      <p class="hint" id="pwHint"></p>
+    </div>
+
+    <h3>Installer sur ce téléphone</h3>
+    <p class="small" id="setInstall"></p>
+
+    <div class="sactions">
+      <button class="ghost" id="setClose" type="button">Fermer</button>
+      <button class="primary" id="logoutBtn" type="button">Se déconnecter</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+/* ================= Outils ================= */
+const $ = id => document.getElementById(id);
+const fmt = n => (n || 0).toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
+const norm = s => (s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+const pad = n => String(n).padStart(2, "0");
+const dayKey = (d = new Date()) => d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate());
+const hm = t => { const d = new Date(t); return (dayKey(d) === dayKey() ? "" : pad(d.getDate()) + "/" + pad(d.getMonth() + 1) + " ") + pad(d.getHours()) + ":" + pad(d.getMinutes()); };
+const rid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+const plural = (n, s, p) => n + " " + (n > 1 ? p : s);
+const summary = items => (items || []).map(i => i.q + "× " + i.nom).join(", ");
+const round2 = n => Math.round(n * 100) / 100;
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
+const MOYENS = { especes: "Espèces", carte: "Carte", autre: "Autre" };
+const statutLabel = o => o.statut === "paye" ? (MOYENS[o.moyen] || "Payé") : "Non payé";
+const ID_DOMAIN = "emmahdfvente.app"; // pseudo-adresse technique : aucun e-mail n'est jamais envoyé
+
+let deviceId = LS.get("emmahdf-device", null);
+if (!deviceId) { deviceId = "d" + rid(); LS.set("emmahdf-device", deviceId); }
+const sessionId = rid().slice(0, 6);
+let vendeur = LS.get("emmahdf-vendeur", "");
+
+/* ================= Stockage : mode essai (local) ================= */
+function makeLocalStore() {
+  const KEY = "emmahdf-local";
+  let data = LS.get(KEY, null) || { products: [], orders: [], config: {}, journal: [] };
+  let h = null, since = 0;
+  const save = () => LS.set(KEY, data);
+  const emit = () => {
+    if (!h) return;
+    h.products(data.products.slice());
+    h.config(Object.assign({}, data.config));
+    h.orders(data.orders.filter(o => (o.t || 0) > since));
+    h.journal(data.journal.slice());
+  };
+  return {
+    kind: "local",
+    start(handlers) { h = handlers; emit(); },
+    stop() { h = null; },
+    watchOrders(ts) { since = ts; emit(); },
+    addProduct(p) { data.products.push(p); save(); emit(); },
+    deleteProduct(id) { data.products = data.products.filter(p => p.id !== id); save(); emit(); },
+    saveOrder(o) { data.orders.push(o); save(); emit(); },
+    updateOrder(id, f) { data.orders = data.orders.map(o => o.id === id ? Object.assign({}, o, f) : o); save(); emit(); },
+    deleteOrder(id) { data.orders = data.orders.filter(o => o.id !== id); save(); emit(); },
+    setConfig(c) { data.config = Object.assign({}, data.config, c); save(); emit(); },
+    log(e) { data.journal.push(e); if (data.journal.length > 20000) data.journal.splice(0, data.journal.length - 20000); save(); if (h) h.journal(data.journal.slice()); },
+    allOrders() { return Promise.resolve(data.orders.slice()); },
+    allJournal() { return Promise.resolve(data.journal.slice()); }
+  };
+}
+
+/* ================= Stockage : compte en ligne (Firebase) ================= */
+function makeCloudStore(F, db, compte) {
+  const base = ["comptes", compte];
+  const col = n => F.collection(db, ...base, n);
+  const dref = (n, id) => F.doc(db, ...base, n, id);
+  const J_MAX = 400;
+  let h = null, unsubs = [], ordersUnsub = null, jDocs = [], jPending = [], jTimer = null;
+  let jMine = { jour: dayKey(), k: 0, events: [] };
+  const fail = e => { if (h && h.error) h.error(e); };
+  const withId = d => Object.assign({ id: d.id }, d.data());
+  const emitJournal = () => { if (!h) return; let ev = []; jDocs.forEach(d => { ev = ev.concat(d.events); }); h.journal(ev.concat(jPending)); };
+  function flush() {
+    while (jPending.length) {
+      const today = dayKey();
+      if (jMine.jour !== today) jMine = { jour: today, k: 0, events: [] };
+      if (jMine.events.length >= J_MAX) jMine = { jour: today, k: jMine.k + 1, events: [] };
+      const batch = jPending.splice(0, J_MAX - jMine.events.length);
+      jMine.events = jMine.events.concat(batch);
+      // Un document par téléphone, par jour et par ouverture de l'appli : jamais d'écrasement entre téléphones
+      F.setDoc(dref("journal", today + "_" + deviceId + "_" + sessionId + "_" + jMine.k),
+        { dev: deviceId, jour: today, k: jMine.k, maj: Date.now(), events: jMine.events }).catch(fail);
+    }
+  }
+  return {
+    kind: "cloud",
+    start(handlers) {
+      h = handlers;
+      unsubs.push(F.onSnapshot(col("produits"), s => h && h.products(s.docs.map(withId)), fail));
+      unsubs.push(F.onSnapshot(dref("config", "etat"), s => h && h.config(s.exists() ? s.data() : {}), fail));
+      unsubs.push(F.onSnapshot(F.query(col("journal"), F.orderBy("maj", "desc"), F.limit(20)),
+        s => { jDocs = s.docs.map(d => ({ id: d.id, events: d.data().events || [] })); emitJournal(); }, fail));
+    },
+    stop() { flush(); unsubs.forEach(u => u()); unsubs = []; if (ordersUnsub) ordersUnsub(); ordersUnsub = null; h = null; },
+    watchOrders(ts) {
+      if (ordersUnsub) ordersUnsub();
+      ordersUnsub = F.onSnapshot(F.query(col("commandes"), F.where("t", ">", ts), F.orderBy("t", "desc")),
+        s => h && h.orders(s.docs.map(withId)), fail);
+    },
+    addProduct(p) { const { id, ...b } = p; F.setDoc(dref("produits", id), b).catch(fail); },
+    deleteProduct(id) { F.deleteDoc(dref("produits", id)).catch(fail); },
+    saveOrder(o) { const { id, ...b } = o; F.setDoc(dref("commandes", id), b).catch(fail); },
+    updateOrder(id, f) { F.updateDoc(dref("commandes", id), f).catch(fail); },
+    deleteOrder(id) { F.deleteDoc(dref("commandes", id)).catch(fail); },
+    setConfig(c) { F.setDoc(dref("config", "etat"), c, { merge: true }).catch(fail); },
+    log(e) { jPending.push(e); emitJournal(); clearTimeout(jTimer); jTimer = setTimeout(flush, 800); },
+    allOrders() { return F.getDocs(col("commandes")).then(s => s.docs.map(withId)); },
+    allJournal() { return F.getDocs(col("journal")).then(s => { let ev = []; s.docs.forEach(d => { ev = ev.concat(d.data().events || []); }); return ev.concat(jPending); }); }
+  };
+}
+
+/* ================= Firebase ================= */
+const FB_VER = "10.12.2";
+const cfg = window.EMMAHDF_FIREBASE_CONFIG || null;
+const cfgValid = !!(cfg && cfg.apiKey && !/^COLLE/i.test(cfg.apiKey));
+let FB = null, fbLoading = null;
+
+function loadFirebase() {
+  if (fbLoading) return fbLoading;
+  const b = "https://www.gstatic.com/firebasejs/" + FB_VER + "/";
+  fbLoading = Promise.all([import(b + "firebase-app.js"), import(b + "firebase-auth.js"), import(b + "firebase-firestore.js")])
+    .then(([A, Au, F]) => {
+      const app = A.initializeApp(cfg);
+      const auth = Au.getAuth(app);
+      let db;
+      try { db = F.initializeFirestore(app, { localCache: F.persistentLocalCache({ tabManager: F.persistentMultipleTabManager() }) }); }
+      catch (e) { db = F.getFirestore(app); }
+      FB = { Au, F, auth, db };
+      Au.onAuthStateChanged(auth, user => {
+        if (user) {
+          if (LS.get("emmahdf-mode", null) === "local") return;
+          const compte = (user.email || "").split("@")[0];
+          startApp(makeCloudStore(F, db, compte), compte);
+        } else if (store && store.kind === "cloud") {
+          stopApp(); showLogin();
+        } else if (!store) {
+          showLogin();
+        }
+      });
+      return FB;
+    });
+  fbLoading.catch(() => { fbLoading = null; });
+  return fbLoading;
+}
+
+/* ================= État de l'application ================= */
+let store = null, acctName = "";
+const S = { products: [], cart: {}, orders: [], resetAt: null, journal: [], query: "", filter: "toutes", editing: false, journalOpen: false, ordersShown: 50, jShown: 300, loaded: false };
+
+function logEvent(a, f) {
+  if (!store) return;
+  const e = { t: Date.now(), a, dev: deviceId };
+  if (vendeur) e.v = vendeur;
+  if (f) for (const k in f) if (f[k] !== undefined && f[k] !== null && f[k] !== "") e[k] = f[k];
+  store.log(e);
+}
+
+function startApp(st, name) {
+  if (store) stopApp();
+  store = st; acctName = name || "";
+  Object.assign(S, { products: [], cart: {}, orders: [], resetAt: null, journal: [], query: "", editing: false, loaded: false });
+  $("search").value = "";
+  $("login").hidden = true; $("app").hidden = false;
+  $("acctLabel").textContent = st.kind === "cloud" ? "Compte : " + acctName : "Mode essai";
+  st.start({
+    products(list) { S.products = list.sort((a, b) => (a.ordre || 0) - (b.ordre || 0)); S.loaded = true; render(); },
+    config(c) {
+      const r = c.resetAt || 0;
+      if (r !== S.resetAt) { S.resetAt = r; st.watchOrders(r); }
+      render();
+    },
+    orders(list) { S.orders = list; render(); },
+    journal(ev) { S.journal = ev; if (S.journalOpen) renderJournal(); },
+    error(e) { showErr(e && e.code === "permission-denied" ? "Accès refusé par la base : vérifie les règles Firestore (voir le guide)." : "Erreur de synchronisation : " + ((e && (e.message || e.code)) || "inconnue")); }
+  });
+  logEvent("connexion", { d: st.kind === "cloud" ? "Compte " + acctName : "Mode essai" });
+  setSync();
+  updateInstallCard();
+}
+function stopApp() { if (store) store.stop(); store = null; $("app").hidden = true; closeSheet(); $("settings").hidden = true; }
+
+function showLogin() {
+  $("app").hidden = true; $("login").hidden = false;
+  $("lVendeur").value = vendeur;
+  $("cfgMissing").hidden = cfgValid;
+  $("loginArea").hidden = !cfgValid;
+}
+
+/* ================= Connexion ================= */
+let createMode = false;
+function setTab(c) {
+  createMode = c;
+  $("tabLogin").setAttribute("aria-selected", String(!c));
+  $("tabCreate").setAttribute("aria-selected", String(c));
+  $("createFields").hidden = !c;
+  $("lPw").autocomplete = c ? "new-password" : "current-password";
+  $("lSubmit").textContent = c ? "Créer le compte" : "Se connecter";
+  $("lHint").textContent = "";
+}
+$("tabLogin").onclick = () => setTab(false);
+$("tabCreate").onclick = () => setTab(true);
+
+const AUTH_ERR = {
+  "auth/invalid-credential": "Identifiant ou mot de passe incorrect.",
+  "auth/invalid-login-credentials": "Identifiant ou mot de passe incorrect.",
+  "auth/wrong-password": "Identifiant ou mot de passe incorrect.",
+  "auth/user-not-found": "Identifiant ou mot de passe incorrect.",
+  "auth/email-already-in-use": "Cet identifiant est déjà utilisé. Choisis-en un autre ou connecte-toi.",
+  "auth/weak-password": "Le mot de passe doit faire au moins 6 caractères.",
+  "auth/network-request-failed": "Pas de connexion internet. La première connexion sur un téléphone demande du réseau.",
+  "auth/too-many-requests": "Trop d'essais. Patiente quelques minutes puis réessaie.",
+  "auth/operation-not-allowed": "La connexion par identifiant n'est pas activée dans Firebase (voir le guide, étape 2).",
+  "auth/unauthorized-domain": "Ce site n'est pas autorisé dans Firebase (voir le guide, étape 7)."
+};
+
+$("loginForm").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const id = $("lId").value.trim().toLowerCase();
+  const pw = $("lPw").value;
+  const hint = $("lHint");
+  if (!/^[a-z0-9_-]{3,30}$/.test(id)) { hint.textContent = "L'identifiant doit faire 3 à 30 caractères : lettres sans accent, chiffres, - ou _."; return; }
+  if (pw.length < 6) { hint.textContent = "Le mot de passe doit faire au moins 6 caractères."; return; }
+  if (createMode && pw !== $("lPw2").value) { hint.textContent = "Les deux mots de passe ne sont pas identiques."; return; }
+  vendeur = $("lVendeur").value.trim(); LS.set("emmahdf-vendeur", vendeur);
+  hint.textContent = ""; $("lSubmit").disabled = true;
+  try {
+    const { Au, auth } = await loadFirebase();
+    await Au.setPersistence(auth, Au.browserLocalPersistence);
+    const email = id + "@" + ID_DOMAIN;
+    LS.del("emmahdf-mode");
+    if (createMode) await Au.createUserWithEmailAndPassword(auth, email, pw);
+    else await Au.signInWithEmailAndPassword(auth, email, pw);
+    $("lPw").value = ""; $("lPw2").value = "";
+  } catch (e) {
+    hint.textContent = AUTH_ERR[e && e.code] || ("Connexion impossible : " + ((e && (e.code || e.message)) || "erreur inconnue"));
+  }
+  $("lSubmit").disabled = false;
+});
+
+$("localBtn").onclick = () => {
+  vendeur = $("lVendeur").value.trim() || vendeur; LS.set("emmahdf-vendeur", vendeur);
+  LS.set("emmahdf-mode", "local");
+  startApp(makeLocalStore(), "");
+};
+
+/* ================= Affichage ================= */
+function sessionOrders() { return S.orders.filter(o => (o.t || 0) > (S.resetAt || 0)); }
+function findProduct(pid) { return S.products.find(p => p.id === pid) || null; }
+function cartItems() {
+  const out = [];
+  S.products.forEach(p => { const q = S.cart[p.id] || 0; if (q > 0) out.push({ pid: p.id, nom: p.nom, prix: p.prix || 0, q }); });
+  return out;
+}
+
+function render() {
+  if (!store) return;
+  const list = $("list");
+  $("loading").hidden = S.loaded;
+  $("empty").hidden = !S.loaded || S.products.length > 0;
+  document.body.classList.toggle("editing", S.editing);
+  $("editBtn").textContent = S.editing ? "Terminé" : "Supprimer des produits";
+  $("editBtn").hidden = S.products.length === 0 && !S.editing;
+
+  const sess = sessionOrders(), sold = {}, byM = { especes: 0, carte: 0, autre: 0 };
+  let paid = 0, unpaid = 0, nUnpaid = 0;
+  sess.forEach(o => {
+    (o.items || []).forEach(i => { sold[i.pid] = (sold[i.pid] || 0) + (i.q || 0); });
+    if (o.statut === "paye") { paid += o.total || 0; byM[o.moyen || "autre"] = (byM[o.moyen || "autre"] || 0) + (o.total || 0); }
+    else { unpaid += o.total || 0; nUnpaid++; }
+  });
+
+  const q = norm(S.query), seen = {};
+  let shown = 0;
+  S.products.forEach(p => {
+    const inCart = S.cart[p.id] || 0, s = sold[p.id] || 0;
+    seen[p.id] = true;
+    let li = list.querySelector('[data-id="' + p.id + '"]');
+    if (!li) {
+      li = document.createElement("li"); li.className = "item"; li.dataset.id = p.id;
+      li.innerHTML = '<div class="name"><span class="n"></span><span class="meta"></span></div>' +
+        '<button class="minus" type="button">−</button><span class="count">0</span>' +
+        '<button class="plus" type="button">+</button><button class="del" type="button">Supprimer</button>';
+      li.querySelector(".plus").onclick = () => change(p.id, 1);
+      li.querySelector(".minus").onclick = () => change(p.id, -1);
+      li.querySelector(".del").onclick = () => removeProduct(p.id);
+    }
+    list.appendChild(li);
+    const match = !q || norm(p.nom).includes(q);
+    li.hidden = !match; if (match) shown++;
+    li.classList.toggle("incart", inCart > 0);
+    li.querySelector(".n").textContent = p.nom;
+    li.querySelector(".meta").textContent = (p.prix ? fmt(p.prix) : "Sans prix") + " · " + plural(s, "vendu", "vendus");
+    li.querySelector(".plus").setAttribute("aria-label", "Ajouter à la commande : " + p.nom);
+    li.querySelector(".minus").setAttribute("aria-label", "Retirer de la commande : " + p.nom);
+    li.querySelector(".del").setAttribute("aria-label", "Supprimer " + p.nom);
+    const c = li.querySelector(".count");
+    if (c.textContent !== String(inCart)) c.textContent = inCart;
+    c.classList.toggle("zero", inCart === 0);
+    li.querySelector(".minus").disabled = inCart <= 0;
+  });
+  [...list.children].forEach(li => { if (!seen[li.dataset.id]) li.remove(); });
+
+  const nm = $("noMatch");
+  nm.hidden = !(q && S.products.length && shown === 0);
+  if (!nm.hidden) nm.textContent = "Aucun produit ne correspond à « " + S.query.trim() + " ». Tu peux l'ajouter ci-dessous.";
+
+  $("totalEur").textContent = fmt(paid);
+  $("totalSub").textContent = "encaissé · " + plural(sess.length, "commande", "commandes");
+  if (unpaid > 0) { const b = document.createElement("b"); b.textContent = " · " + fmt(unpaid) + " à encaisser"; $("totalSub").appendChild(b); }
+  $("stEsp").textContent = fmt(byM.especes); $("stCarte").textContent = fmt(byM.carte);
+  $("stAutre").textContent = fmt(byM.autre); $("stNon").textContent = fmt(unpaid);
+
+  const items = cartItems();
+  let n = 0, tot = 0;
+  items.forEach(i => { n += i.q; tot += i.q * i.prix; });
+  $("cartBar").hidden = n === 0;
+  document.body.classList.toggle("hascart", n > 0);
+  $("cartTotal").textContent = fmt(tot);
+  $("cartCount").textContent = plural(n, "article", "articles");
+
+  renderOrders(sess, nUnpaid);
+  renderClients();
+  if (S.journalOpen) renderJournal();
+}
+
+/* Confirmation en deux appuis (suppression, annulation de paiement…) */
+let armed = null, armedTimer = null;
+function twoTap(key, action) {
+  if (armed !== key) { armed = key; clearTimeout(armedTimer); armedTimer = setTimeout(() => { armed = null; render(); }, 4000); render(); return; }
+  armed = null; clearTimeout(armedTimer); action();
+}
+
+function renderOrders(sess, nUnpaid) {
+  const ul = $("orders"); ul.textContent = "";
+  const rows = sess.filter(o => S.filter === "toutes" || o.statut !== "paye").sort((a, b) => b.t - a.t);
+  $("ordersTitle").textContent = "Commandes" + (nUnpaid ? " (" + nUnpaid + " non payée" + (nUnpaid > 1 ? "s" : "") + ")" : "");
+  rows.slice(0, S.ordersShown).forEach(o => {
+    const li = document.createElement("li"); li.className = "order";
+    const head = document.createElement("div"); head.className = "ohead";
+    const c = document.createElement("span"); c.className = "oc"; c.textContent = o.client || "Client";
+    const t = document.createElement("span"); t.className = "ot"; t.textContent = hm(o.t) + (o.v ? " · " + o.v : "");
+    head.append(c, t);
+    const it = document.createElement("div"); it.className = "oitems"; it.textContent = summary(o.items);
+    const foot = document.createElement("div"); foot.className = "ofoot";
+    const tot = document.createElement("span"); tot.className = "otot"; tot.textContent = fmt(o.total);
+    const st = document.createElement("button"); st.type = "button";
+    if (o.statut === "paye") {
+      const k = "unpay:" + o.id;
+      st.className = "badge paye" + (armed === k ? " armed" : "");
+      st.textContent = armed === k ? "Annuler le paiement ?" : "✓ " + statutLabel(o);
+      st.onclick = () => twoTap(k, () => markUnpaid(o));
+    } else {
+      st.className = "badge non_paye";
+      st.textContent = "Non payé · Encaisser";
+      st.onclick = () => openPay(o);
+    }
+    const del = document.createElement("button"); del.type = "button";
+    const kd = "del:" + o.id;
+    del.className = "odel" + (armed === kd ? " armed" : "");
+    del.textContent = armed === kd ? "Confirmer" : "Supprimer";
+    del.onclick = () => twoTap(kd, () => deleteOrder(o));
+    foot.append(tot, st, del);
+    li.append(head, it, foot);
+    ul.appendChild(li);
+  });
+  $("noOrders").hidden = rows.length > 0;
+  $("noOrders").textContent = S.filter === "toutes" ? "Aucune commande pour l'instant." : "Toutes les commandes sont payées.";
+  $("ordersMore").hidden = rows.length <= S.ordersShown;
+}
+
+function renderClients() {
+  const seen = {}, dl = $("clientsList"); dl.textContent = "";
+  S.orders.forEach(o => { const k = norm(o.client); if (!k || seen[k]) return; seen[k] = 1; const op = document.createElement("option"); op.value = o.client; dl.appendChild(op); });
+}
+
+document.querySelectorAll(".seg button").forEach(b => b.onclick = () => {
+  S.filter = b.dataset.f; S.ordersShown = 50;
+  document.querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  render();
+});
+$("ordersMore").onclick = () => { S.ordersShown += 50; render(); };
+
+$("search").addEventListener("input", e => {
+  S.query = e.target.value;
+  if (!$("pName").value || $("pName").dataset.fromSearch === "1") { $("pName").value = S.query.trim(); $("pName").dataset.fromSearch = "1"; }
+  render();
+});
+$("pName").addEventListener("input", () => { $("pName").dataset.fromSearch = "0"; });
+
+function setSync() {
+  const el = $("sync"); el.classList.remove("err");
+  if (!store) return;
+  if (store.kind === "local") el.textContent = "Mode essai : données enregistrées sur ce téléphone uniquement";
+  else el.textContent = navigator.onLine ? "Synchronisé avec tous les téléphones du compte" : "Hors ligne : les ventes sont gardées et seront envoyées au retour du réseau";
+}
+function showErr(msg) { const el = $("sync"); el.textContent = msg; el.classList.add("err"); }
+window.addEventListener("online", setSync);
+window.addEventListener("offline", setSync);
+
+/* ================= Journal ================= */
+const LABELS = {
+  connexion: "Ouverture de l'appli", commande: "Commande validée", paiement: "Paiement reçu", impaye: "Paiement annulé",
+  commande_supprimee: "Commande supprimée", panier_vide: "Commande abandonnée", ajout: "Produit ajouté",
+  suppression: "Produit supprimé", reset: "Nouvelle session", export: "Commandes exportées", export_journal: "Journal exporté",
+  mdp: "Mot de passe modifié", statut: "Statut modifié"
+};
+function eventDetail(e) {
+  const parts = [];
+  if (e.c) parts.push(e.c);
+  if (e.p) parts.push((e.q ? (e.q > 0 ? "+" : "") + e.q + " " : "") + e.p + (e.prix ? " (" + fmt(e.prix) + ")" : ""));
+  if (e.d) parts.push(e.d);
+  if (e.v) parts.push("par " + e.v);
+  return parts.join(" · ");
+}
+function renderJournal() {
+  const evs = S.journal.slice().sort((a, b) => b.t - a.t);
+  const ul = $("jList"); ul.textContent = "";
+  evs.slice(0, S.jShown).forEach(e => {
+    const li = document.createElement("li");
+    const t = document.createElement("span"); t.className = "jt"; t.textContent = hm(e.t);
+    const m = document.createElement("span"); m.textContent = LABELS[e.a] || e.a;
+    const det = eventDetail(e);
+    if (det) { const d = document.createElement("span"); d.className = "jd"; d.textContent = det; m.appendChild(d); }
+    const r = document.createElement("span"); r.className = "jr";
+    if (e.tot != null) r.append(fmt(e.tot));
+    if (e.st) { const s = document.createElement("span"); s.className = e.st === "paye" ? "pos" : "neg"; s.textContent = e.st === "paye" ? (MOYENS[e.m] || "Payé") : "Non payé"; r.appendChild(s); }
+    li.append(t, m, r); ul.appendChild(li);
+  });
+  const n = evs.length;
+  $("jInfo").textContent = n ? (n > S.jShown ? S.jShown + " sur " + n + " actions récentes" : plural(n, "action récente", "actions récentes")) : "Aucune action pour l'instant";
+  $("jMore").hidden = n <= S.jShown;
+}
+$("jMore").onclick = () => { S.jShown += 300; renderJournal(); };
+$("journalBtn").onclick = () => {
+  S.journalOpen = !S.journalOpen;
+  $("journalBox").hidden = !S.journalOpen;
+  $("journalBtn").textContent = S.journalOpen ? "Masquer le journal" : "Voir le journal";
+  if (S.journalOpen) { renderJournal(); $("journalBox").scrollIntoView({ behavior: "smooth", block: "start" }); }
+};
+
+/* ================= Commande en cours ================= */
+function change(pid, delta) {
+  const q = (S.cart[pid] || 0) + delta;
+  if (q < 0) return;
+  if (q === 0) delete S.cart[pid]; else S.cart[pid] = q;
+  try { if (navigator.vibrate) navigator.vibrate(delta > 0 ? 12 : 6); } catch (e) {}
+  render();
+  const c = document.querySelector('[data-id="' + pid + '"] .count');
+  if (c) { c.classList.remove("bump"); void c.offsetWidth; c.classList.add("bump"); }
+}
+$("cartClear").onclick = () => {
+  const items = cartItems();
+  if (items.length) logEvent("panier_vide", { d: summary(items), tot: round2(items.reduce((s, i) => s + i.q * i.prix, 0)) });
+  S.cart = {}; render();
+};
+
+/* Fenêtre de confirmation / d'encaissement */
+let sheet = { mode: null, order: null, moyen: "especes", total: 0 };
+function setMoyen(v) {
+  sheet.moyen = v;
+  document.querySelectorAll(".pay button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === v)));
+  $("cashBox").hidden = v !== "especes";
+  $("sConfirm").textContent = sheet.mode === "pay" ? "Marquer comme payé" : (v === "non_paye" ? "Enregistrer (non payé)" : "Confirmer la vente");
+  updateRendu();
+}
+document.querySelectorAll(".pay button").forEach(b => b.onclick = () => setMoyen(b.dataset.v));
+function parseMoney(s) {
+  s = (s || "").replace(/\s|€/g, "").replace(",", ".");
+  if (s === "") return 0;
+  const n = Number(s);
+  return isFinite(n) && n >= 0 ? round2(n) : NaN;
+}
+function updateRendu() {
+  const el = $("rendu"), recu = parseMoney($("sRecu").value);
+  el.classList.remove("neg");
+  if (!$("sRecu").value.trim() || isNaN(recu)) { el.textContent = ""; return; }
+  const diff = round2(recu - sheet.total);
+  if (diff >= 0) el.textContent = "À rendre : " + fmt(diff);
+  else { el.textContent = "Il manque " + fmt(-diff); el.classList.add("neg"); }
+}
+$("sRecu").addEventListener("input", updateRendu);
+
+function fillItems(items) {
+  const ul = $("sItems"); ul.textContent = "";
+  items.forEach(i => {
+    const li = document.createElement("li");
+    const a = document.createElement("span"); a.textContent = i.q + " × " + i.nom;
+    const b = document.createElement("span"); b.textContent = fmt(i.q * i.prix);
+    li.append(a, b); ul.appendChild(li);
+  });
+}
+function openConfirm() {
+  const items = cartItems(); if (!items.length) return;
+  sheet = { mode: "new", order: null, moyen: "especes", total: round2(items.reduce((s, i) => s + i.q * i.prix, 0)) };
+  $("sTitle").textContent = "Confirmer la commande";
+  fillItems(items); $("sTotal").textContent = fmt(sheet.total);
+  $("clientBox").hidden = false; $("optNonPaye").hidden = false;
+  $("sClient").value = ""; $("sRecu").value = ""; $("sHint").textContent = "";
+  setMoyen("especes");
+  $("overlay").hidden = false;
+  setTimeout(() => $("sClient").focus(), 60);
+}
+function openPay(o) {
+  sheet = { mode: "pay", order: o, moyen: "especes", total: o.total || 0 };
+  $("sTitle").textContent = "Encaisser : " + (o.client || "client");
+  fillItems(o.items || []); $("sTotal").textContent = fmt(sheet.total);
+  $("clientBox").hidden = true; $("optNonPaye").hidden = true;
+  $("sRecu").value = ""; $("sHint").textContent = "";
+  setMoyen("especes");
+  $("overlay").hidden = false;
+}
+function closeSheet() { $("overlay").hidden = true; }
+$("cartNext").onclick = openConfirm;
+$("sBack").onclick = closeSheet;
+$("overlay").addEventListener("click", e => { if (e.target === $("overlay")) closeSheet(); });
+$("settings").addEventListener("click", e => { if (e.target === $("settings")) $("settings").hidden = true; });
+document.addEventListener("keydown", e => { if (e.key === "Escape") { closeSheet(); $("settings").hidden = true; } });
+$("sClient").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); confirmSheet(); } });
+$("sConfirm").onclick = confirmSheet;
+
+function confirmSheet() {
+  const m = sheet.moyen;
+  const recu = m === "especes" && $("sRecu").value.trim() ? parseMoney($("sRecu").value) : null;
+  if (recu !== null && isNaN(recu)) { $("sHint").textContent = "Le montant reçu doit être un nombre, par exemple 10 ou 12,50."; return; }
+  if (sheet.mode === "pay") {
+    const o = sheet.order;
+    const f = { statut: "paye", moyen: m, payeLe: Date.now() };
+    if (recu !== null) f.recu = recu;
+    store.updateOrder(o.id, f);
+    logEvent("paiement", { c: o.client, d: summary(o.items), tot: o.total, st: "paye", m });
+    closeSheet(); return;
+  }
+  const client = $("sClient").value.trim();
+  if (!client) { $("sHint").textContent = "Indique le nom du client."; $("sClient").focus(); return; }
+  const items = cartItems(); if (!items.length) { closeSheet(); return; }
+  const o = {
+    id: "c" + rid(), client, items, total: sheet.total,
+    statut: m === "non_paye" ? "non_paye" : "paye", moyen: m === "non_paye" ? null : m,
+    t: Date.now(), dev: deviceId
+  };
+  if (recu !== null) o.recu = recu;
+  if (vendeur) o.v = vendeur;
+  store.saveOrder(o);
+  logEvent("commande", { c: client, d: summary(items), tot: o.total, st: o.statut, m: o.moyen });
+  S.cart = {};
+  closeSheet();
+  if (S.query) { S.query = ""; $("search").value = ""; }
+  render();
+}
+
+function markUnpaid(o) {
+  store.updateOrder(o.id, { statut: "non_paye", moyen: null });
+  logEvent("impaye", { c: o.client, d: summary(o.items), tot: o.total, st: "non_paye" });
+}
+function deleteOrder(o) {
+  store.deleteOrder(o.id);
+  logEvent("commande_supprimee", { c: o.client, d: summary(o.items), tot: o.total, st: o.statut, m: o.moyen });
+}
+
+/* ================= Produits ================= */
+$("addForm").addEventListener("submit", ev => {
+  ev.preventDefault();
+  const nom = $("pName").value.trim(), prix = parseMoney($("pPrice").value);
+  if (!nom) { $("hint").textContent = "Donne un nom au produit."; return; }
+  if (isNaN(prix)) { $("hint").textContent = "Le prix doit être un nombre, par exemple 1,50."; return; }
+  if (S.products.some(p => norm(p.nom) === norm(nom))) { $("hint").textContent = "Ce produit est déjà dans la liste."; return; }
+  $("hint").textContent = "";
+  const p = { id: "p" + rid(), nom, prix, ordre: Date.now() };
+  store.addProduct(p);
+  logEvent("ajout", { p: nom, prix });
+  $("pName").value = ""; $("pPrice").value = ""; $("pName").dataset.fromSearch = "0";
+  if (S.query) { S.query = ""; $("search").value = ""; }
+  render();
+});
+function removeProduct(pid) {
+  const p = findProduct(pid);
+  delete S.cart[pid];
+  store.deleteProduct(pid);
+  if (p) logEvent("suppression", { p: p.nom, prix: p.prix });
+}
+$("editBtn").onclick = () => { S.editing = !S.editing; render(); };
+
+/* Nouvelle session : les totaux repartent de zéro, commandes et journal restent enregistrés */
+let resetArmTimer = null;
+$("resetBtn").onclick = () => {
+  const b = $("resetBtn"), label = "Nouvelle session (remise à zéro)";
+  if (!b.classList.contains("armed")) {
+    b.classList.add("armed"); b.textContent = "Appuie encore pour confirmer";
+    clearTimeout(resetArmTimer);
+    resetArmTimer = setTimeout(() => { b.classList.remove("armed"); b.textContent = label; }, 4000);
+    return;
+  }
+  clearTimeout(resetArmTimer); b.classList.remove("armed"); b.textContent = label;
+  const sess = sessionOrders();
+  S.cart = {};
+  store.setConfig({ resetAt: Date.now() });
+  logEvent("reset", { d: "Session précédente : " + plural(sess.length, "commande", "commandes"), tot: round2(sess.reduce((s, o) => s + (o.total || 0), 0)) });
+};
+
+/* ================= Exports CSV ================= */
+const csvCell = s => '"' + String(s == null ? "" : s).replace(/"/g, '""') + '"';
+const money = n => (n || 0).toFixed(2).replace(".", ",");
+const dt = t => { const d = new Date(t); return pad(d.getDate()) + "/" + pad(d.getMonth() + 1) + "/" + d.getFullYear() + ";" + pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds()); };
+const fileDate = () => { const d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); };
+async function download(name, lines) {
+  const blob = new Blob(["\ufeff" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
+  const file = new File([blob], name, { type: "text/csv" });
+  if (navigator.canShare && /Android|iPhone|iPad/i.test(navigator.userAgent) && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], title: name }); return; } catch (e) { if (e && e.name === "AbortError") return; }
+  }
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+$("exportBtn").onclick = async () => {
+  const b = $("exportBtn"); b.disabled = true;
+  try {
+    const all = (await store.allOrders()).sort((a, b) => a.t - b.t);
+    const lines = ["Date;Heure;Client;Produits;Total (€);Statut;Moyen de paiement;Montant reçu (€);Vendeur;Session en cours"];
+    all.forEach(o => lines.push(dt(o.t) + ";" + csvCell(o.client) + ";" + csvCell(summary(o.items)) + ";" + money(o.total) + ";" +
+      (o.statut === "paye" ? "Payé" : "Non payé") + ";" + (MOYENS[o.moyen] || "") + ";" + (o.recu != null ? money(o.recu) : "") + ";" +
+      csvCell(o.v || "") + ";" + ((o.t || 0) > (S.resetAt || 0) ? "Oui" : "Non")));
+    const sold = {}, byM = { especes: 0, carte: 0, autre: 0 }; let unpaid = 0;
+    all.filter(o => (o.t || 0) > (S.resetAt || 0)).forEach(o => {
+      (o.items || []).forEach(i => { const s = sold[i.nom] || (sold[i.nom] = { prix: i.prix, q: 0 }); s.q += i.q; });
+      if (o.statut === "paye") byM[o.moyen || "autre"] += o.total || 0; else unpaid += o.total || 0;
+    });
+    lines.push("", "Bilan de la session en cours", "Produit;Prix unitaire (€);Quantité vendue;Total (€)");
+    Object.keys(sold).forEach(n => lines.push(csvCell(n) + ";" + money(sold[n].prix) + ";" + sold[n].q + ";" + money(sold[n].q * sold[n].prix)));
+    lines.push("", ";;Espèces;" + money(byM.especes), ";;Carte;" + money(byM.carte), ";;Autre;" + money(byM.autre), ";;Non payé;" + money(unpaid));
+    await download("EmmaHdfVente-commandes-" + fileDate() + ".csv", lines);
+    logEvent("export", { d: plural(all.length, "commande", "commandes") });
+  } catch (e) { showErr("Export impossible : " + ((e && e.message) || "vérifie la connexion")); }
+  b.disabled = false;
+};
+
+$("exportJBtn").onclick = async () => {
+  const b = $("exportJBtn"); b.disabled = true;
+  try {
+    const evs = (await store.allJournal()).sort((a, b) => a.t - b.t);
+    const devs = {}; let nDev = 0;
+    const lines = ["Date;Heure;Action;Client;Détail;Montant (€);Statut;Moyen;Vendeur;Téléphone"];
+    evs.forEach(e => {
+      if (!(e.dev in devs)) devs[e.dev] = ++nDev;
+      const det = [e.p ? (e.q ? e.q + " " : "") + e.p : "", e.d || ""].filter(Boolean).join(" · ");
+      lines.push(dt(e.t) + ";" + csvCell(LABELS[e.a] || e.a) + ";" + csvCell(e.c || "") + ";" + csvCell(det) + ";" +
+        (e.tot != null ? money(e.tot) : (e.prix ? money(e.prix) : "")) + ";" + (e.st ? (e.st === "paye" ? "Payé" : "Non payé") : "") + ";" +
+        (MOYENS[e.m] || "") + ";" + csvCell(e.v || "") + ";Téléphone " + devs[e.dev]);
+    });
+    await download("EmmaHdfVente-journal-" + fileDate() + ".csv", lines);
+    logEvent("export_journal", { d: plural(evs.length, "action", "actions") });
+  } catch (e) { showErr("Export impossible : " + ((e && e.message) || "vérifie la connexion")); }
+  b.disabled = false;
+};
+
+/* ================= Compte ================= */
+$("menuBtn").onclick = () => {
+  $("setAcct").textContent = store && store.kind === "cloud"
+    ? "Connecté au compte « " + acctName + " ». Toutes les données sont partagées entre les téléphones connectés à ce compte."
+    : "Mode essai : les données restent sur ce téléphone. Déconnecte-toi puis crée un compte pour les synchroniser.";
+  $("setVendeur").value = vendeur;
+  $("pwBox").hidden = !(store && store.kind === "cloud");
+  $("pwOld").value = ""; $("pwNew").value = ""; $("pwHint").textContent = "";
+  $("setInstall").textContent = installHelp();
+  $("logoutBtn").textContent = store && store.kind === "cloud" ? "Se déconnecter" : "Quitter le mode essai";
+  $("settings").hidden = false;
+};
+$("setClose").onclick = () => { $("settings").hidden = true; };
+$("setVendeur").addEventListener("change", () => { vendeur = $("setVendeur").value.trim(); LS.set("emmahdf-vendeur", vendeur); });
+$("pwSave").onclick = async () => {
+  const h = $("pwHint"), oldPw = $("pwOld").value, newPw = $("pwNew").value;
+  if (newPw.length < 6) { h.textContent = "Le nouveau mot de passe doit faire au moins 6 caractères."; return; }
+  try {
+    const { Au, auth } = FB, u = auth.currentUser;
+    await Au.reauthenticateWithCredential(u, Au.EmailAuthProvider.credential(u.email, oldPw));
+    await Au.updatePassword(u, newPw);
+    h.textContent = "Mot de passe modifié. Pense à prévenir les autres bénévoles.";
+    logEvent("mdp");
+    $("pwOld").value = ""; $("pwNew").value = "";
+  } catch (e) { h.textContent = AUTH_ERR[e && e.code] || "Modification impossible : " + ((e && e.code) || "erreur"); }
+};
+$("logoutBtn").onclick = async () => {
+  const wasCloud = store && store.kind === "cloud";
+  $("settings").hidden = true;
+  if (wasCloud && FB) { await FB.Au.signOut(FB.auth); }
+  else { LS.del("emmahdf-mode"); stopApp(); showLogin(); if (cfgValid) loadFirebase().catch(() => {}); }
+};
+
+/* ================= Installation (Android / iPhone / ordinateur) ================= */
+let deferredPrompt = null;
+const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+function installHelp() {
+  if (isStandalone()) return "L'application est déjà installée sur cet appareil.";
+  if (isIOS()) return "Sur iPhone : ouvre ce site dans Safari, appuie sur le bouton Partager (carré avec une flèche), puis « Sur l'écran d'accueil ».";
+  if (deferredPrompt) return "Appuie sur « Installer » dans le bandeau en haut de la page.";
+  return "Sur Android : menu ⋮ de Chrome, puis « Installer l'application » ou « Ajouter à l'écran d'accueil ». Sur ordinateur : icône d'installation dans la barre d'adresse de Chrome ou Edge.";
+}
+function updateInstallCard() {
+  const hide = isStandalone() || LS.get("emmahdf-install-dismissed", false) || !(deferredPrompt || isIOS());
+  $("installCard").hidden = hide;
+  if (hide) return;
+  $("installGo").hidden = !deferredPrompt;
+  $("installText").textContent = deferredPrompt ? "Installe EmmaHdfVente sur ce téléphone pour l'ouvrir comme une vraie application." : installHelp();
+}
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredPrompt = e; updateInstallCard(); });
+window.addEventListener("appinstalled", () => { deferredPrompt = null; updateInstallCard(); });
+$("installGo").onclick = async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice.catch(() => {}); deferredPrompt = null; updateInstallCard(); };
+$("installClose").onclick = () => { LS.set("emmahdf-install-dismissed", true); updateInstallCard(); };
+
+/* ================= Démarrage ================= */
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+if (LS.get("emmahdf-mode", null) === "local") {
+  startApp(makeLocalStore(), "");
+} else if (cfgValid) {
+  loadFirebase().catch(() => {
+    showLogin();
+    $("fbError").hidden = false;
+    $("fbError").textContent = "Impossible de charger le service de comptes. Vérifie la connexion internet puis recharge la page.";
+  });
+} else {
+  showLogin();
+}
+</script>
+</body>
+</html>
